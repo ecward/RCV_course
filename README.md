@@ -1,6 +1,6 @@
 # RCV_course
 
-Code and documentation for DD3356-RCV2016. 
+Code and documentation for DD3356-RCV2016.
 
 This project on the RCV should is about integrating a number of modules to achieve some level of autonomy for the vehicle.
 
@@ -89,7 +89,7 @@ jerk.
 While the route planning and speed planning might only consider a
 simplified model of the vehicle, the employed lateral and longitudinal
 control algorithms must provide stable and robust control and interface
-with low-level control components of the vehicle. 
+with low-level control components of the vehicle.
 
 Scenario 2. requires inference about the behavior of the other car,
 what rules of the road applies and finding speed profiles that
@@ -109,7 +109,7 @@ state estimation of the RCV.
 
 ### Integration and implementation
 
-As far as possible we will use exiting components to provide the
+As far as possible we will use existing components to provide the
 required functionality. These components either come from previous
 work on the RCV, previous research code by project members or open
 source components. The components will be integrated using ROS as middle-ware.
@@ -117,6 +117,54 @@ source components. The components will be integrated using ROS as middle-ware.
 The perception requirements for the two scenarios represents the
 majority of the work required, and 4 out of the 7 project members will
 be focused on this.
+
+For localization and mapping, we will rely both on GPS position and the
+odometry and velodyne measurements from the RCV. Both the GPS and
+odometry will potentially require some amount of work to integrate into
+a ROS system. The velodyne is deemed more simple. Most likely, we will
+provide two separate localization systems with mapping running on its own, without
+integrating GPS coordinates. However, the system will be able to re-initialize
+using GPS coordinates if we can not track our position in the map.
+
+To localize using velodyne data, there are several different options.
+Considering the environment at the test site, robust localization will
+require that we use the full 3D data as opposed to a 2D slice.
+Importantly, we fill focus on localizing with respect to a pre-built map.
+The initial map will be built using an off-the-shelf SLAM approach.
+Then, one option is to use [insert Xi's ICP registration stuff]. However, this
+might need further adaptation to encompass the sparseness of the measurements.
+One approach that has proven to work in similar scenarios is the NDT-MCL
+framework from Örebro, *Normal Distributions Transform Monte-Carlo Localization*
+by Saarinen et al., which uses the *Normal Distribution
+Transform* for registration and *Monte Carlo localization* for state estimation.
+Johan will work on registration of the velodyne data, something which might
+potentially be used for localization with respect to a point-based map.
+
+The scenarios also require that we have some tracking of dynamic objects.
+At the end of the project the system will be able to distinguish between
+static and dynamic elements in the map. Further, the dynamic elements should
+be separated into pedestrians and car. This might feed back into the planning
+system to adapt the behaviour to different situations. Again, there are
+several possibilities for distinguishing between classes of objects in
+laser point clouds, especially with applications in driving scenarios.
+Ingmar Posner and his group have done a lot of work in this area and they
+have presented some systems that should be relatively straightforward to
+implement. In particular, they presented one paper last year that combined
+a method based on a kind of convolution in combination with a linear
+classifier. This can efficiently and precisely detect cars and
+pedestrians oriented along a few main directions, an assumption that should
+hold in our application scenario.
+There are several other benchmarks which perform better on the widely used
+*Kitti* data set. One such example with code available is
+*3D Object Proposals for Accurate Object Class Detection* from Toronto.
+Similar to other well performing methods, they employ neural nets for
+classification. Another example of a high scoring implementation with
+code available is *Faster R-CNN: Towards Real-Time Object
+Detection with Region Proposal Networks* from University of Technology
+and Science of China and Microsoft Research.
+The plan is to integrate one of the neural net based systems is possible
+and if not implement a simple classifier like the from Posner's group.
+
 
 *TODO, this is just what I remember from the meetings/talking, I am sure I'm wrong, please update!*
 
@@ -157,12 +205,3 @@ planning.
 ### Deliverables
 
 *TODO, I don't know if we can provide a list of deliverables that are prioritized, so that if we run out of time we don't do some of them? How strict is it to meet all of the deliverables we promise here?*
-
-
-
-
-
-
-
-
-
