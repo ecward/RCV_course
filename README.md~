@@ -211,7 +211,7 @@ planning.
   later be evaluated according to cost functions based on safety,
   comfort, progress etc. A big part will be to find suitable cost
   functions and integrate with the behavioural layer and risk
-  evaluation methods developed by Erik. 
+  evaluation methods developed by Erik.
 
 ### Deliverables
 
