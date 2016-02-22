@@ -211,12 +211,7 @@ planning.
   later be evaluated according to cost functions based on safety,
   comfort, progress etc. A big part will be to find suitable cost
   functions and integrate with the behavioural layer and risk
-  evaluation methods developed by Erik. 
-
-* Silvia: Deep understanding of state of the art computer vision algorithms for
-  object detection and tracking, and learning how to apply to real problems and 
-  for real time applications. For this project my goal is to implement detection 
-  and tracking system, mainly for obstacle avoidance purpose, using a stereo camera system.
+  evaluation methods developed by Erik.
 
 ### Deliverables
 
