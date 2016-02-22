@@ -185,7 +185,7 @@ planning.
 
 * Johan: point cloud registration for object modeling and mapping
 
-* Niclas, Erik: Speed planning for risk averse behavior
+* Niclas, Erik: Trajectory planning, Werling, for risk averse behavior
 
 * Niclas: Integration of motion planner
 
@@ -201,6 +201,17 @@ planning.
   project my primary goal is to implement and test base-line methods
   based on a time-gap model for junction navigation and if possible
   test my own research on the RCV.
+
+* Niclas: Previously my work has focused on path generation in
+  unstructured areas such as parking lots or open pit mining areas. In
+  this project I want to gain more understanding for methods for
+  trajectory generation in structured environments such as when
+  driving in a road network. I want to test the methods presented by
+  Werling to generate a vast amount of candidate trajectories than can
+  later be evaluated according to cost functions based on safety,
+  comfort, progress etc. A big part will be to find suitable cost
+  functions and integrate with the behavioural layer and risk
+  evaluation methods developed by Erik.
 
 ### Deliverables
 
