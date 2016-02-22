@@ -213,6 +213,11 @@ planning.
   functions and integrate with the behavioural layer and risk
   evaluation methods developed by Erik. 
 
+* Silvia: Deep understanding of state of the art computer vision algorithms for
+  object detection and tracking, and learning how to apply to real problems and 
+  for real time applications. For this project my goal is to implement detection 
+  and tracking system, mainly for obstacle avoidance purpose, using a stereo camera system.
+
 ### Deliverables
 
 *TODO, I don't know if we can provide a list of deliverables that are prioritized, so that if we run out of time we don't do some of them? How strict is it to meet all of the deliverables we promise here?*
