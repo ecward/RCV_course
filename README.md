@@ -183,7 +183,7 @@ planning.
 
 * Silvia, Johan: Detection and tracking of moving objects using stereo camera
 
-* Johan: point cloud registration for object modeling and mapping
+* Johan: Point cloud registration for object modeling and mapping
 
 * Niclas, Erik: Trajectory planning, Werling, for risk averse behavior
 
@@ -217,6 +217,8 @@ planning.
   object detection and tracking, and learning how to apply to real problems and 
   for real time applications. For this project my goal is to implement detection 
   and tracking system, mainly for obstacle avoidance purpose, using a stereo camera system.
+  
+* Johan: Understanding of possibilities and limitations of velodyne lidar data as compaired to structured light sensors such as kinect/primesense sensors. I also seek to learn about other ways of generating pointclouds and range data in the form of a stereo vision systems. Given the different sensor characteristics, I want to learn how to adapt and apply previously developed methods to new environments. I also want to learn about some of the practical details of producing an autonomous car, such as sensor placement and calibration.
 
 ### Deliverables
 
