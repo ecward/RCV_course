@@ -22,19 +22,26 @@ Course group page:
 * Xi Chen, CVAP KTH
 * Silvia Cruciani, CVAP KTH
 * Johan Ekekrantz, CVAP KTH
-* Niclas Evestedt, Automaic Control LiU
+* Niclas Evestedt, Automatic Control LiU
 * Rui Oliveira, Automatic Control KTH
 * Erik Ward, CVAP KTH
 
-### System
+### Background
 
 The Research Concept Vehicle (RCV) is a electric car developed at the
 Integrated Transport Research Lab (ITRL) at KTH that is instrumented
 with drive-by-wire capability and different sensors.
 
-*TODO*
+In addition to the work on assembling the hardware of the RCV, several
+projects aiming to provide different functionality for the RCV have
+been carried out, many of them master thesis projects. The aim of this
+project is to integrate some of the components already developed for
+the RCV with other software components, primarily open-source
+components, using suitable middle-ware, in order to achieve
+autonomy in some limited scenarios.
 
-### Scenario descriptions
+
+### Indented functionality
 
 In this project the aim is to provide sufficient autonomy for two
 types of scenarios involving the RCV and other traffic participants.
@@ -52,7 +59,7 @@ significantly higher than in scenario 1., e.g. 10 m/s rather than
 almost walking pace as in scenario 1.
 
 The most fundamental requirements for these scenarios is perception
-algorithms that can estimate the driveable surface relative to the RCV,
+algorithms that can estimate the drive-able surface relative to the RCV,
 localization with respect to a world coordinate frame where goal
 way-points are described (where the left or right turn leads to in
 scenario 2. and where the specific pose is in scenario 1.), motion
@@ -107,6 +114,7 @@ reached.
 Most of the functionally that is required is reliant on accurate
 state estimation of the RCV.
 
+
 ### Integration and implementation
 
 As far as possible we will use existing components to provide the
@@ -144,7 +152,7 @@ The scenarios also require that we have some tracking of dynamic objects.
 At the end of the project the system will be able to distinguish between
 static and dynamic elements in the map. Further, the dynamic elements should
 be separated into pedestrians and car. This might feed back into the planning
-system to adapt the behaviour to different situations. Again, there are
+system to adapt the behavior to different situations. Again, there are
 several possibilities for distinguishing between classes of objects in
 laser point clouds, especially with applications in driving scenarios.
 Ingmar Posner and his group have done a lot of work in this area and they
@@ -165,23 +173,51 @@ and Science of China and Microsoft Research.
 The plan is to integrate one of the neural net based systems is possible
 and if not implement a simple classifier like the from Posner's group.
 
+In order to avoid static obstacles around the vehicle we will use the
+cost map ROS component developed by Andreas Högger, which we will
+develop further in order to include only road as non-obstacles. The
+current plan is to use results from Karl Kurzer's master thesis on
+motion planning using the hybrid A* algorithm in open areas, however
+this might have to be revised depending on the outcome of his work.
 
-*TODO, this is just what I remember from the meetings/talking, I am sure I'm wrong, please update!*
+For trajectory planning in the presence of dynamic obstacles we will
+use the research code of Erik and Niclas which will use a Werling
+based approach which given a reference path, from the hybrid A* planner
+in the open area case and from the road-map otherwise, optimizes the
+robot's trajectory with respect to a cost function that avoids dynamic
+obstacles and minimizes jerk.
 
-* Nils and Xi: Integrate ROS NDT framework from Örebro in order to do mapping and localization of the vehicle.
+For control of the RCV a trajectory tracking controller will be
+developed that has a useful and easy to use interface that will allow
+the RCV to be used reliably and easily through ROS. The Trajectory
+Tracking Controller will be able to receive trajectory requests and
+will be responsible for following them. In order to make the system
+reusable and useful for different purposes, the trajectory requests
+can come in the fol- lowing ways: An (x,y,) trajectory, i.e., a set of
+(x,y,) states with an associated time; An (x,y,) path with a fixed
+velocity; A GPS trajectory, with an associated time; A GPS path with a
+fixed velocity.
+
+A simple odometry/Information system will also be implemented, it will
+be responsible from broadcasting general information about the car
+such as its position and velocities from lower level components to
+ROS. Not much state estimation effort will be put into it, it will
+simply make use of the existing GPS/IMU to generate odometry
+information.
+
+* Nils and Xi: Integrate ROS NDT framework from Örebro in order to do
+  mapping and localization of the vehicle.
 
 * Nils: Dynamic object tracking from velodyne data.
 
-* Xi: Road, Obstacle, Not Road classification of point clouds. That can be used to provide a local grid map for
-planning.
+* Xi: Road, Obstacle, Not Road classification of point clouds. That
+can be used to provide a local grid map for planning.
 
-* Xi: (tentative) Road map using road/not-road grid-map. Should
-  contain center of lanes as connected line-segments and route graph.
+* Erik: Offline road map, hard-coded as Lanelet file. Use of existing
+  code from iQMatic project for this.
 
-* Erik: Offline road map, hard-coded as Lanelet file. Use of existing code from iQMatic project
-  for this.
-
-* Silvia, Johan: Detection and tracking of moving objects using stereo camera
+* Silvia, Johan: Detection and tracking of moving objects using stereo
+  camera
 
 * Johan: Point cloud registration for object modeling and mapping
 
@@ -189,9 +225,11 @@ planning.
 
 * Niclas: Integration of motion planner
 
-* Erik: Risk inference in intersection using probabilistic modeling of other vehicle's future motion.
+* Erik: Risk inference in intersection using probabilistic modeling of
+  other vehicle's future motion.
 
-* Rui: Lateral/longitudinal MPC, interface with lower level systems of the RCV to ROS.
+* Rui: Lateral/longitudinal path following control, interface with
+  lower level systems of the RCV to ROS.
 
 ### Learning outcomes
 
@@ -200,7 +238,7 @@ planning.
   vision algorithms for use in higher level behaviors. For this
   project my primary goal is to implement and test base-line methods
   based on a time-gap model for junction navigation and if possible
-  test my own research on the RCV.
+  test my own ideas based on simulation of driver behavior on the RCV.
 
 * Niclas: Previously my work has focused on path generation in
   unstructured areas such as parking lots or open pit mining areas. In
@@ -210,7 +248,7 @@ planning.
   Werling to generate a vast amount of candidate trajectories than can
   later be evaluated according to cost functions based on safety,
   comfort, progress etc. A big part will be to find suitable cost
-  functions and integrate with the behavioural layer and risk
+  functions and integrate with the behavioral layer and risk
   evaluation methods developed by Erik. 
 
 * Silvia: Deep understanding of state of the art computer vision algorithms for
@@ -218,8 +256,30 @@ planning.
   for real time applications. For this project my goal is to implement detection 
   and tracking system, mainly for obstacle avoidance purpose, using a stereo camera system.
   
-* Johan: Understanding of possibilities and limitations of velodyne lidar data as compaired to structured light sensors such as kinect/primesense sensors. I also seek to learn about other ways of generating pointclouds and range data in the form of a stereo vision systems. Given the different sensor characteristics, I want to learn how to adapt and apply previously developed methods to new environments. I also want to learn about some of the practical details of producing an autonomous car, such as sensor placement and calibration.
+* Johan: Understanding of possibilities and limitations of velodyne
+  lidar data as compared to structured light sensors such as
+  kinect/primesense sensors. I also seek to learn about other ways of
+  generating point-clouds and range data in the form of a stereo vision
+  systems. Given the different sensor characteristics, I want to learn
+  how to adapt and apply previously developed methods to new
+  environments. I also want to learn about some of the practical
+  details of producing an autonomous car, such as sensor placement and
+  calibration.
 
 ### Deliverables
 
-*TODO, I don't know if we can provide a list of deliverables that are prioritized, so that if we run out of time we don't do some of them? How strict is it to meet all of the deliverables we promise here?*
+Demo at Arlanda Test Track that demonstrates that the integrated
+components can handle the scenarios described in the intended
+functionality section:
+
+1. Parking lot (open area) navigation. The RCV should handle
+navigating, at low speeds, to a defined pose, e.g. a
+specific parking space, while avoiding collisions with static obstacles
+and pedestrians.
+
+2. Junction navigation. The RCV should successfully handle a T-junction
+scenario where another car is driving through the junction and the
+goal of the RCV is to make a left or right turn through the
+junction. Here the speeds of the RCV and the other car is
+significantly higher than in scenario 1., e.g. 10 m/s rather than
+almost walking pace as in scenario 1.
