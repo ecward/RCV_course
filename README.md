@@ -208,7 +208,8 @@ information.
 * Nils and Xi: Integrate ROS NDT framework from Örebro in order to do
   mapping and localization of the vehicle.
 
-* Nils: Dynamic object tracking from velodyne data.
+* Nils: Dynamic object tracking from velodyne data, possibly in
+  combination with stereo data.
 
 * Xi: Road, Obstacle, Not Road classification of point clouds. That
 can be used to provide a local grid map for planning.
@@ -249,13 +250,13 @@ can be used to provide a local grid map for planning.
   later be evaluated according to cost functions based on safety,
   comfort, progress etc. A big part will be to find suitable cost
   functions and integrate with the behavioral layer and risk
-  evaluation methods developed by Erik. 
+  evaluation methods developed by Erik.
 
 * Silvia: Deep understanding of state of the art computer vision algorithms for
-  object detection and tracking, and learning how to apply to real problems and 
-  for real time applications. For this project my goal is to implement detection 
+  object detection and tracking, and learning how to apply to real problems and
+  for real time applications. For this project my goal is to implement detection
   and tracking system, mainly for obstacle avoidance purpose, using a stereo camera system.
-  
+
 * Johan: Understanding of possibilities and limitations of velodyne
   lidar data as compared to structured light sensors such as
   kinect/primesense sensors. I also seek to learn about other ways of
@@ -265,6 +266,18 @@ can be used to provide a local grid map for planning.
   environments. I also want to learn about some of the practical
   details of producing an autonomous car, such as sensor placement and
   calibration.
+
+* Xi: Understanding the state of the art algorithms for terrain point
+  cloud traversability classification. Compare the quality and
+  algorithm performance by using the point cloud generated from
+  velodyne (sparse, long range) and stereo camera (dense, short
+  range). Learning how to use multi-core/GPU programming to optimize
+  the program to run in real time for a fast driving car.
+
+* Nils: Understand more about how deep learning methods function, as applied
+  to detection scenarios, in this case cars, pedestrians and bicycles.
+  I also hope to learn more about the Velodyne sensor and how it might
+  be applicable to my work on indoor mobile robots.
 
 ### Deliverables
 
