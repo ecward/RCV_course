@@ -266,6 +266,13 @@ can be used to provide a local grid map for planning.
   details of producing an autonomous car, such as sensor placement and
   calibration.
 
+* Xi: Understanding the state of the art algorithms for terrain point
+  cloud traversability classification. Compare the quality and
+  algorithm performance by using the point cloud generated from
+  velodyne (sparse, long range) and stereo camera (dense, short
+  range). Learning how to use multi-core/GPU programming to optimize
+  the program to run in real time for a fast driving car.
+
 ### Deliverables
 
 Demo at Arlanda Test Track that demonstrates that the integrated
