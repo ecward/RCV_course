@@ -74,10 +74,7 @@ Scenario 1. requires a model of where roads are and topology of the
 road network, e.g. that the RCV should be in the right lane and this
 leads to the right lane of the connecting road after the turn. A map
 of the road network, such as an RNDF file or a Lanelet file, containing
-the lon,lat of center of lanes is assumed to be available a-priori
-although it might not be very accurate. We thus need to estimate the
-RCVs position relative to the off-line road map, e.g. the distance to
-the right edge of the road.
+the lon,lat of center of lanes is assumed to be available a-priori.
 
 The motion planning in scenario 1. will at least be able to find a
 route that does not collide with any static obstacle.  Consideration
@@ -278,6 +275,14 @@ can be used to provide a local grid map for planning.
   to detection scenarios, in this case cars, pedestrians and bicycles.
   I also hope to learn more about the Velodyne sensor and how it might
   be applicable to my work on indoor mobile robots.
+
+* Rui: The aim is that the project will give further insights in two
+  major areas.  The first being the area of path and trajectory control
+  of autonomous vehiclesand the second being the control architecture
+  and integration aspects concerning complex automated
+  systems. Furthermore, the hope is to learn more about the subjects of the
+  other students as well as working toward a higher level of automation
+  of the RCV platform.
 
 ### Deliverables
 
