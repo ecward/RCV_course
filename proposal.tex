@@ -12,7 +12,7 @@
 
 \section{DD3356-RCV2016 Overview}
 
-This project on the RCV should is about integrating a number of modules to achieve some level of autonomy for the vehicle.
+This project proposal is for an autonomy project with integration on the Research Concept Vehicle (RCV) where a number of modules need to be integrated to achieve some level of autonomy for the vehicle.
 
 Course description:
 
@@ -41,10 +41,9 @@ Course integration repository:
 
 \section{Background}
 
-The Research Concept Vehicle (RCV) is a electric car developed at the
+The RCV is a electric car developed at the
 Integrated Transport Research Lab (ITRL) at KTH that is instrumented
 with drive-by-wire capability and different sensors.
-
 In addition to the work on assembling the hardware of the RCV, several
 projects aiming to provide different functionality for the RCV have
 been carried out, many of them master thesis projects. The aim of this
@@ -79,34 +78,33 @@ almost walking pace as in scenario 1.
 The most fundamental requirements for these scenarios is perception
 algorithms that can estimate the drivable surface relative to the RCV,
 localization with respect to a world coordinate frame where goal
-way-points are described (where the left or right turn leads to in
-scenario 2. and where the specific pose is in scenario 1.), motion
-planing that avoids static obstacles and path-following control of the
+way-points are described
+%(where the left or right turn leads to in scenario 2. and where the specific pose is in scenario 1.),
+, motion planing that avoids static obstacles and path-following control of the
 vehicle. Both these scenarios requires detection and tracking of moving
-objects, in scenario 2. another car and scenario 1. pedestrians, using
-sensors mounted on the vehicle. For scenario 1. the detection range
-requirement is shorter than in scenario 2.  however we need to be able
+objects, in scenario 2, another car and scenario 1, pedestrians, using
+sensors mounted on the vehicle. For scenario 1, the detection range
+requirement is shorter than in scenario 2, however we need to be able
 to detect much smaller targets.
 
-Scenario 2. requires a model of where roads are and topology of the
+Scenario 2, requires a model of where roads are and topology of the
 road network, e.g. that the RCV should be in the right lane and this
 leads to the right lane of the connecting road after the turn. A map
 of the road network, such as an RNDF file or a Lanelet file, containing
-the lon,lat of center of lanes is assumed to be available a-priori
+the global position of the center of lanes is assumed to be available a-priori
 although it might not be very accurate. We thus need to estimate the
 RCVs position relative to the off-line road map, e.g. the distance to
 the right edge of the road.
 
-The motion planning in scenario 1. will be able to find a
-route that does not collide with any static obstacle.  Consideration
+The motion planning in scenario 1, will be able to find a
+route that does not collide with any static obstacle. Consideration
 of dynamic obstacles will be handled either by slowing down or by
 considering dynamic obstacles during planning. Motion planning in
-scenario 2.  is mostly concerned with small corrections with respect
+scenario 2, is mostly concerned with small corrections with respect
 the route given by the lane center in order to achieve a smooth
-ride. Scenario 1. and 2. presents two different types of problems,
-where in scenario 1. we need to perform precise manoeuvring at low
-speeds where in scenario 2. we need to follow the road, rather than
-finding a route, at higher speeds. In addition to avoiding obstacles
+ride. Scenario 1 and 2 presents two different types of problems,
+where in scenario 1, we need to perform precise manoeuvring at low
+speeds where in scenario 2, we need to follow the road at higher speeds, rather than finding a route and slowly progressing through an unstructured environment. In addition to avoiding obstacles
 and dynamic objects generated speed profiles for the RCV car should
 take into account comfort constraints such as maximal acceleration and
 jerk.
@@ -116,17 +114,17 @@ simplified model of the vehicle, the employed lateral and longitudinal
 control algorithms must provide stable and robust control and interface
 with low-level control components of the vehicle.
 
-Scenario 2. requires inference about the behavior of the other car,
+Scenario 2, requires inference about the behaviour of the other car,
 what rules of the road applies and finding speed profiles that
-correspond to safe, natural behavior of the RCV, e.g. break if the
+correspond to safe, natural behaviour of the RCV, e.g. break if the
 other car has the right of way and only proceeding through the
 intersection when the collision risk of doing so is negligible.
 
-There will be a high level behavior module of the robot that
+There will be a high level behaviour module of the robot that
 can figure out what kind of actions are appropriate, e.g. driving
 slower on parking lots and according to speed limits on roads. This
-high level behavior module should be able to take as input a mission
-way-point and switch behaviors appropriately until the way point is
+high level behaviour module should be able to take as input a mission
+way-point and switch behaviours appropriately until the way point is
 reached.
 
 Most of the functionally that is required is reliant on accurate
@@ -134,7 +132,7 @@ state estimation of the RCV.
 
 \section{Deliverables}
 
-Demos at Arlanda Test Track that demonstrates that the integrated
+Demonstrations at Arlanda Test Track that demonstrates that the integrated
 components can handle the scenarios described in the intended
 functionality section. For both types of scenarios, parking lot and junction driving, we assume we have driven the RCV manually
 in the area where experiments are performed beforehand in order to
@@ -147,18 +145,17 @@ collect data to map the environment.
   to a defined goal pose, given as input from a user. Navigation
 can include both forward an backward motion and the precision
 required for successfully reaching the goal pose is set to be
-sufficent for the RCV to get into normal size parking pocket. No
+sufficient for the RCV to get into normal size parking pocket. No
 parallel parking is assumed to be necessary.
 
-We assume that there are no major differences in the appereance of the
+We assume that there are no major differences in the appearance of the
 parking lot from the time the area was mapped. Only small differences
 such as one or two parked cars which where not present during mapping
 are assumed. For instance this would not allow there to be a
 significant amount of snow present whilst the area was mapped during
-dry, warm conditions.
-
-The number of dynamic objects are assumed to be few and move at a 
-walking pace, e.g. up to three pedestrians are walking on the parking lot.
+dry, warm conditions. The number of dynamic objects are assumed to be few and move at a 
+walking pace.
+%, e.g. up to three pedestrians are walking on the parking lot.
 
 \item Basic junction navigation. The RCV should successfully drive
   trough an empty T-junction, staying close to the center of the right
@@ -171,31 +168,31 @@ walking pace, e.g. up to three pedestrians are walking on the parking lot.
   junction and the goal of the RCV is to make a left or right turn
   through the junction. Here we assume that there are no
   other static obstacles on the road and only one other car is present, no other moving
-objects such as pedestrains are considered here.
+objects such as pedestrians are considered here.
 
 \end{itemize}
 
 \section{Integration Milestones}
-
-To make sure that our work towards the scenarios progress as planned and that
-we do not get stuck at unforeseen obstacles, we plan to have several milestones
-where we verify the gradual progress towards a working system.
+A number of intermediate milestones has been defined in order to verify the gradual progress towards a working system and to detect unforeseen problems early in the project.
+%To make sure that our work towards the scenarios progress as planned and that
+%we do not get stuck at unforeseen obstacles, we plan to have several milestones
+%where we verify the gradual progress towards a working system.
 In the first milestones we primarily aim to evaluate the basic navigation components
 and message communication as the rest of the system relies on these components.
 
 \subsection{Milestone 1: Data Collection, March 31}
 \label{milestone1}
 
-In this milestone we will evaluate several components of the underlying platform.
-Most importantly, we will set up machines and sensors to communicate with each
-other using ROS message protocols. An important aspect of this is timestamping
-of individual message. We will evaluate if can use GPS for this and if we need
-more than one GPS unit. The message types and topics for all the different sensors
-will be decided and implemented. This will enable us to gather data from a run
-at the Arlanda test track. The data should be saved in a ROS bag format, enabling
-all project participants to simply play back the data to recreate the drive.
-
-The following explicit goals have been established for this mile stone:
+In this milestone several components of the underlying platform will be evaluated.
+Most importantly, communication using ROS message protocols between computers and sensors needs to be tested and functioning.
+%we will set up computers and sensors to communicate with each
+%other using ROS message protocols. 
+An important aspect of this is time-stamping
+of individual message. An evaluation of the use of the GPS-clock for time synchronisation will be done and also an evaluation to see if more than one GPS unit is needed.
+The message types and topics for all the different sensors
+will be decided and implemented at this point to enable for data collection at the Arlanda test track. The data should be saved in a ROS bag format, enabling
+all project participants to simply play back the data to recreate the drive. \\ \\
+The following explicit goals have been established for this milestone:
 \begin{enumerate}
 \item ROS Interfaces for the sensor data from the RCV platform. The sensor data includes wheel encoder data, position and heading from GPS and acceleration and angular velocity from IMU.
 \item ROS Interfaces for the perception components, i.e. message types and names
@@ -208,29 +205,26 @@ The following explicit goals have been established for this mile stone:
 \subsection{Milestone 2: Simple Demo \& Visualization, April 30}
 \label{milestone2}
 
-In the second milestone we will demonstrate some basic navigation capability.
-The car will drive on a lane at the test track. At one point an
-obstacle appears on the track and the planner will have to take the costmap
-into account by providing a path around to the path following controller.
-
+In the second milestone a demonstration of basic navigation and visualisation capability will be performed.
+The car will drive on a lane at the test track and at one point a
+simulated obstacle will appear along the route and the planner will have to take the obstacle into account and provide a path around for the path following controller. \\ \\
 The milestone includes the following integration tasks:
 \begin{enumerate}
 \item Robot able to follow a simple path provided by the planner
 \item Planner able to plan on obstacle costmap populated by global static map and laser
-\item We are able to track dynamic obstacles in the Velodyne data
-\item There is some humans and car detection from stereo images
+\item Tracking of dynamic obstacles from the Velodyne data
+\item Basic human and car detection from stereo images
 \item Ground plane estimation is working
 \end{enumerate}
 
 \subsection{Milestone 3: Scenario Integration, May 31}
 \label{milestone3}
 
-For this last milestone we will attempt both of the scenarios, enabling
-us to verify the system performance and work out any remaining problems
-before the final scenario demos. This milestone will have a strong
+For this last milestone an attempt of both the scenarios will be performed to verify the system performance and work out any remaining problems before the final demonstration. This milestone will have a strong
 focus on integration of existing components.
 
-This final integration milestone enables us to test a more fully integrated system, including:
+This final integration milestone enables for testing
+of a more fully integrated system, including:
 \begin{enumerate}
 \item Planner will work on costmap with static obstacles and dynamic obstacles from detection and tracking
 \item GPS and point cloud/odometry localization are integrated
@@ -250,11 +244,11 @@ This final integration milestone enables us to test a more fully integrated syst
 
 %The greater part of this WP will focus on correctly interfacing with the different sensors and actuators on the RCV, and making them available for use through a ROS interface.
 
-In this WP we will focus on correctly interfacing with the different sensors and actuators on the RCV, and making them available for use through a ROS interface.
+In this WP the focus will be on correctly interfacing with the different sensors and actuators on the RCV, and making them available for use through a ROS interface.
 
 This ROS interface will be developed such that sensor data is made available through ROS topics and an interface to the path following controller (to be developed in WP3) is available as a ROS service.
 
-A detailed explanation of overall RCV system architecture to be developed in this WP is given in \ref{sec:system_structure_appendix}.
+A detailed explanation of overall RCV system architecture to be developed in this WP is given in Appendix \ref{sec:system_structure_appendix}.
 
 The issue of time synchronization between multiple computers on the RCV will be tackled. A GPS device will be set up such that it acts as a master clock for the whole system.
 
@@ -349,14 +343,15 @@ Feasible trajectory (WP2)
 \item[Output] -
 \item[Tasks for Integration Milestones]:\
 	\begin{description}
-		\item[Milestone 1] Decide on control strategy and signal conditioning \\
+		\item[Milestone 1] Decide on control strategy and signal conditioning 20h\\
+		
 			For this milestone we aim to have determined whether the GCDC controller can be reused 
 			and have arrived at a clearly defined control strategy. Furthermore, the signal conditioning 
-			of the inputs, i.e extracting control errors etc. from available data, shall be done. 
-		\item[Milestone 2] Controller implemented\\
-			For milestone 2 we aim to have a functioning controller implemented and ready for initial testing
-		\item[Milestone 3] Controller iterated and tuned\\
-			At this point the controller shall be performing satisfactorily for the demo
+			of the inputs, i.e extracting control errors etc. from available data, shall be done. 30h
+		\item[Milestone 2] Controller implementation done and ready for initial testing 50h
+		\item[Milestone 3] Controller iterated and tuned 50h\\
+		
+			At this point the controller shall be performing satisfactorily for the demonstration
 	\end{description}	 
 \end{description}
 
@@ -367,23 +362,23 @@ Feasible trajectory (WP2)
 \item[Summary] To be able to navigate along a road and in a parking lot, the car will have to know its 
 			   position with respect to the road and its surroundings. It also needs to know if there
 			   are obstacles blocking its movement so it can wait or adapt its movement.
-			   To this end, we will build a map of the test area using the point clouds from the
-			   velodyne. An initial map will be built in an offline manner, using GPS data and possibly
-			   IMU and/or odometry. We will then use a framework such as NDT-MCL \cite{saarinen2013normal} 
-			   to localize, as a recent study \cite{magnusson2015beyond} has demonstrated good results
-			   in similar scenarios. If precision is not sufficient we may use e.g. \cite{Zhang_DEMO},
-			   which combines the point clouds with visual information to provide odometry estimates.
+			   To this end, a map of the test area using the point clouds from the
+			   Velodyne need to be created. An initial map will be built in an offline manner, using GPS data and possibly
+			   IMU and/or odometry. A framework such as NDT-MCL \cite{saarinen2013normal} 
+			   will be used to localize, as a recent study \cite{magnusson2015beyond} has demonstrated good results
+			   in similar scenarios. If precision is not sufficient the work in e.g. \cite{Zhang_DEMO},
+			   which combines the point clouds with visual information to provide odometry estimates might be used to increase the accuracy.
 			   The position in the global map together
 			   with the sensor reading will be combined to create an obstacle costmap for the planner.
-			   In the end, we will also integrate the road/off-road labelling in this costmap.
+			   In the end, and integration of the road/off-road labelling in the costmap will be done.
 				
 \item[Input] Point clouds, cameras, GPS, odometry, ground plane estimation, road/off-road labelling
 \item[Output] Localization in global map, obstacle costmap
 \item[Tasks for Integration Milestones]:\
 	\begin{description}
-		\item[Milestone 1] Data collection, construction of global map for localization
-		\item[Milestone 2] Localize in global map, provide costmap to planner
-		\item[Milestone 3] Integrate road labelling from WP8.
+		\item[Milestone 1] Data collection, construction of global map for localization 90h
+		\item[Milestone 2] Localize in global map, provide costmap to planner 80h
+		\item[Milestone 3] Integrate road labelling from WP8 50h
 	\end{description}	 
 \end{description}
 
@@ -392,25 +387,27 @@ Feasible trajectory (WP2)
 \item[Participants] Johan, Silvia
 \item[Summary]
 
-The RCV will contain two RGB cameras, set up for stereo using an arduino to perform the synchronized triggering of the cameras. The system will perform stereo matching using off-the-shelf available algorithms available in OpenCV and ROS. The RCV will also contain other sensors such as two Velodyne lidar sensors and a GPS. These sensors will have to be intrinsically and extrinsically calibrated to find the relative poses of the sensors in the RCV coordinate system. Solving these tasks, we look to apply previously developed work by Johan. 
+The RCV will contain two RGB cameras, set up for stereo using an Arduino to perform the synchronized triggering of the cameras. The system will perform stereo matching using off-the-shelf available algorithms available in OpenCV and ROS. The RCV will also contain other sensors such as two Velodyne lidar sensors and a GPS. These sensors will have to be intrinsically and extrinsically calibrated to find the relative poses of the sensors in the RCV coordinate system. Solving these tasks, previously developed work in \cite{} will be applied. 
 
 \item[Input]
-	Lidar pointclouds  \\
-	GPS position  \\
+	Lidar pointclouds, GPS position 
 \item[Output]
 	TF of extrinsically calibrated sensor setup.  \\
-	Syncronized RGB images \\
+	Synchronized RGB images \\
 	Disparity map/pointclouds for one or two of the RGB images, found using stereo matching \\
 \item[Tasks for Integration Milestones]:\
 	\begin{description}
 		\item[Milestone 1]
 			Data recording possible. 20 h\\
+			
 			Stereo setup in place, with synchronized image triggering. 60 h \\
 		\item[Milestone 2]
 			Disparity map/pointclouds created using stereo vision. 20 h \\
+			
 			Pointcloud registration usable to extrinsically calibrate lidar sensors available. 40 h \\
 		\item[Milestone 3]
 			Improved and tuned Disparity map/pointclouds created using stereo vision. 20 h \\
+			
 			Good estimate of stereo and lidar system TF. 20 h \\
 	\end{description}	 
 \end{description}
@@ -419,21 +416,20 @@ The RCV will contain two RGB cameras, set up for stereo using an arduino to perf
 
 \begin{description}
 \item[Participants] Nils, Silvia
-\item[Summary] The goal of this work package is to track dynamic obstacles in Velodyne data.
-			   This is a capability needed for planning in the presence of cars, where we
-			   need a greater field of view than for example the cameras can offer.
-			   We will also develop recognition of cars and humans from the point clouds,
+\item[Summary] The goal of this work package is to track dynamic obstacles from Velodyne data.
+			   This is a capability needed for planning in the presence of cars, where a greater field of view is needed than the cameras can offer.
+			   A recognition algorithm for cars and humans from the point clouds will be developed,
 			   and results will be integrated with recognition and tracking from images.
 \item[Input] Velodyne data, odometry, ground plane estimation
 \item[Output] Recognition \& tracking of dynamic obstacles in Velodyne data
 \item[Tasks for Integration Milestones]:\
 	\begin{description}
-		\item[Milestone 1] ROS Interfaces established, visualization components in place
-		\item[Milestone 2] Ground plane estimation integrated, basic tracking of dynamic obstacles \&
-						   proof of concept implementation of recognition of humans and cars in point 
-						   clouds building on \cite{wang2015voting}.
+		\item[Milestone 1] ROS Interfaces established, visualization components in place 50h
+		\item[Milestone 2] Ground plane estimation integrated, basic tracking of dynamic obstacles 70h\\
+		
+						   Proof of concept implementation of recognition of humans and cars in point clouds building on \cite{wang2015voting}. 40h
 		\item[Milestone 3] Fuse the detection in stereo images and point clouds. Provide dynamic obstacles
-						   with velocity and heading to the planner.
+						   with velocity and heading to the planner. 60h
 	\end{description}	 
 \end{description}
 
@@ -450,11 +446,13 @@ The RCV will contain two RGB cameras, set up for stereo using an arduino to perf
 \item[Tasks for Integration Milestones]:\
 	\begin{description}
 		\item[Milestone 1]
-			Data collection and ROS Interface setup.
+			Data collection and ROS Interface setup. 20h
 		\item[Milestone 2]
-			Detection of Objects in the stereo camera images through standard OpenCV algorithms. Detection of obstacles in the pointcloud.
+			Detection of objects in the stereo camera images through standard OpenCV algorithms. 20h \\
+			
+			Detection of obstacles in the pointcloud. 20h
 		\item[Milestone 3]
-			Fusion of the detection in the stereo camera images and in the Lidar pointcloud.
+			Fusion of the detection in the stereo camera images and in the Lidar pointcloud. 20h
 	\end{description}	 
 \end{description}
 
@@ -608,11 +606,11 @@ The RCV will contain two RGB cameras, set up for stereo using an arduino to perf
 \begin{itemize}
 \item 
 Erik: Understanding of possibilities and limitations of perception
-algorithms based on velodyne data and state of the art computer
-vision algorithms for use in higher level behaviors. For this
+algorithms based on Velodyne data and state of the art computer
+vision algorithms for use in higher level behaviours. For this
 project my primary goal is to implement and test base-line methods
 based on a time-gap model for junction navigation and if possible
-test my own ideas based on simulation of driver behavior on the RCV.
+test my own ideas based on simulation of driver behaviour on the RCV.
 
 \item 
 Niclas: Previously my work has focused on path generation in
@@ -620,10 +618,10 @@ unstructured areas such as parking lots or open pit mining areas. In
 this project I want to gain more understanding for methods for
 trajectory generation in structured environments such as when
 driving in a road network. I want to test the methods presented by
-Werling to generate a vast amount of candidate trajectories than can
+Werling \cite{werling2010tracking} to generate a vast amount of candidate trajectories than can
 later be evaluated according to cost functions based on safety,
 comfort, progress etc. A big part will be to find suitable cost
-functions and integrate with the behavioral layer and risk
+functions and integrate with the behavioural layer and risk
 evaluation methods developed by Erik.
 
 \item 
@@ -633,9 +631,9 @@ for real time applications. For this project my goal is to implement detection
 and tracking system, mainly for obstacle avoidance purpose, using a stereo camera system.
 
 \item 
-Johan: Understanding of possibilities and limitations of velodyne
+Johan: Understanding of possibilities and limitations of Velodyne
 lidar data as compared to structured light sensors such as
-kinect/primesense sensors. I also seek to learn about other ways of
+Kinect/Primesense sensors. I also seek to learn about other ways of
 generating point-clouds and range data in the form of a stereo vision
 systems. Given the different sensor characteristics, I want to learn
 how to adapt and apply previously developed methods to new
