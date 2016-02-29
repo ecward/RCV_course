@@ -75,10 +75,7 @@ Scenario 1. requires a model of where roads are and topology of the
 road network, e.g. that the RCV should be in the right lane and this
 leads to the right lane of the connecting road after the turn. A map
 of the road network, such as an RNDF file or a Lanelet file, containing
-the lon,lat of center of lanes is assumed to be available a-priori
-although it might not be very accurate. We thus need to estimate the
-RCVs position relative to the off-line road map, e.g. the distance to
-the right edge of the road.
+the lon,lat of center of lanes is assumed to be available a-priori.
 
 The motion planning in scenario 1. will at least be able to find a
 route that does not collide with any static obstacle.  Consideration
@@ -301,8 +298,6 @@ can be used to provide a local grid map for planning.
   Furthermore I will have the opportunity to learn how can the interactions
   with other systems , e.g., replanning while driving, might affect/destabilize
   the controller performance.
-
-
 ### Deliverables
 
 Demo at Arlanda Test Track that demonstrates that the integrated
