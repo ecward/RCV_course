@@ -12,7 +12,8 @@
 
 \section{DD3356-RCV2016 Overview}
 
-This project proposal is for an autonomy project with integration on the Research Concept Vehicle (RCV) where a number of modules need to be integrated to achieve some level of autonomy for the vehicle.
+
+This project proposal is for an autonomous vehicle project where a number of modules will be integrated on the Research Concept Vehicle (RCV) to achieve some level of autonomy.
 
 Course description:
 
@@ -461,15 +462,23 @@ The RCV will contain two RGB cameras, set up for stereo using an Arduino to perf
 \begin{description}
 \item[Participants] Xi
 \item[Summary]
+The objective of semantic labeling package is to identify the road/non-road area by classifying the point cloud from both velodyne and stereo camera. It will use the result of dynamic object detection from WP6 and WP7 and generate an occupancy map with only static obstacles for path planning. 
 \item[Input]
+Velodyne pointcloud, Stereo Pointcloud, dynamic obstacles (WP6, WP7)
 \item[Output]
+Static Occupancy map, labeled pointcloud
 \item[Tasks for Integration Milestones]:\
-	\begin{description}
-		\item[Milestone 1]
-		\item[Milestone 2]
-		\item[Milestone 3] 
-	\end{description}	 
-\end{description}
+\begin{description}
+\item[Milestone 1]
+Data collection and setting up ros interface. 20h
+\item[Milestone 2]
+Road area detection for both camera stereo and Velodyne. 50h\\ 
+
+Static obstacle detection. 30h
+\item[Milestone 3] 
+Integrating the classification result with WP6, WP7 and generate static occupancy map. 50h
+\end{description}  
+\end{description}​
 
 %\section{Integration and implementation}
 %
