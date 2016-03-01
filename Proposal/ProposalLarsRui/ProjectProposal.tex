@@ -38,18 +38,27 @@ There are many aspects that can be developed in the RCV, however it is necessary
 
 An important point to make is that the Velodyne sensors are not a concern of this work. They should be easy to interface with by making use of Andreas' work.
 
-\section{Mandatory}
+\section{Mandatory Objectives}
 
 \subsection{Path Following Controller}
 
-The Path Following Controller will be able to receive path requests and will be responsible for following them. In order for proper functioning of the controller, these paths need to be sent to the controller at a refresh rate above 10 Hz, and they must be defined on the car local frame (figure \ref{fig:localReferential}).
+The Path Following Controller will be able to receive path requests and will be responsible for following them. The paths will be sent to the controller in a fixed reference frame, as displayed in figure \ref{fig:fixedReferential}, for example UTM coordinates. The path may be updated at a fixed rate or at irregular intervals, provided that the the updated path connects with the previous one.
+
+%\begin{figure}[h!]
+%\centering
+%\includegraphics[width=0.7\textwidth]{localReferential}
+%\caption{Local (moving) Referential}
+%\label{fig:localReferential}
+%\end{figure} 
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.7\textwidth]{localReferential}
-\caption{Local (moving) Referential}
-\label{fig:localReferential}
+\includegraphics[width=0.7\textwidth]{fixedReferential}
+\caption{Fixed Referential}
+\label{fig:fixedReferential}
 \end{figure} 
+
+
 
 %In order to make the system reusable and useful for different purposes, the trajectory requests can come in the following ways:
 %	An (x,y,θ) trajectory, i.e.,  a set of (x,y,θ) states with an associated time;
@@ -67,19 +76,23 @@ The Path Following Controller will be able to receive path requests and will be 
 
 With this task we will present the ROS user with an easy way to have access to all of the low level information of the RCV. This includes, among others, steering wheel angles, wheel encoder readings and gas pedal position.
 
-\section{Optional} 
+
+\subsection{State Estimator Interface}
+Recent Msc thesis work on the RCV includes development and implementation of a Kalman filter for state estimation. The algorithm fuses information from multiple on-board sensors into optimal (with respect to a cost function) estimates of the vehicle state. This information may be useful for higher level functionality and therefore, it will be included in the interface.
+
+\section{Optional Objectives} 
  
-\subsection{IMU Readings Interface}
-
-This will allow the ROS user to have access to the information transmitted from the IMU.
-
-\subsection{GPS Readings Interface}
-
-This will allow the ROS user to have access to the information transmitted from the GPS.
- 
-\subsection{GPS Based Path Following}
-
-Based on the GPS measurements, the RCV will be able to follow a path defined of GPS waypoints.
+%\subsection{IMU Readings Interface}
+%
+%This will allow the ROS user to have access to the information transmitted from the IMU.
+%
+%\subsection{GPS Readings Interface}
+%
+%This will allow the ROS user to have access to the information transmitted from the GPS.
+% 
+%\subsection{GPS Based Path Following}
+%
+%Based on the GPS measurements, the RCV will be able to follow a path defined of GPS waypoints.
  
 %\subsection{Risks}
 %
@@ -124,18 +137,13 @@ The generated odometry will be processed and displayed in a simple way to the us
 This will allow the user to define fixed frames (figure \ref{fig:fixedReferential}) and send path commands in this easier to use frame.
 
  
-\begin{figure}[h!]
-\centering
-\includegraphics[width=0.7\textwidth]{fixedReferential}
-\caption{Fixed Referential}
-\label{fig:fixedReferential}
-\end{figure} 
  
 
 \subsection{Platform Health}
 
 Typical sources of errors will be shown to the user (battery check, etc…)
 
-   
+\section{Learning outcomes}
+The aim is that the project will give us further insights in two major areas. The first being the area of path and trajectory control of autonomous vehicles and the second being the control architecture and integration aspects concerning complex automated systems. Furthermore we hope to learn more about the subjects of the other students as well as working toward a higher level of automation of the RCV platform.
    
 \end{document}

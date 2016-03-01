@@ -25,6 +25,7 @@ Course group page:
 * Niclas Evestedt, Automatic Control LiU
 * Rui Oliveira, Automatic Control KTH
 * Erik Ward, CVAP KTH
+* Lars Svensson, Mechatronics KTH
 
 ### Background
 
@@ -74,10 +75,7 @@ Scenario 1. requires a model of where roads are and topology of the
 road network, e.g. that the RCV should be in the right lane and this
 leads to the right lane of the connecting road after the turn. A map
 of the road network, such as an RNDF file or a Lanelet file, containing
-the lon,lat of center of lanes is assumed to be available a-priori
-although it might not be very accurate. We thus need to estimate the
-RCVs position relative to the off-line road map, e.g. the distance to
-the right edge of the road.
+the lon,lat of center of lanes is assumed to be available a-priori.
 
 The motion planning in scenario 1. will at least be able to find a
 route that does not collide with any static obstacle.  Consideration
@@ -193,10 +191,14 @@ the RCV to be used reliably and easily through ROS. The Trajectory
 Tracking Controller will be able to receive trajectory requests and
 will be responsible for following them. In order to make the system
 reusable and useful for different purposes, the trajectory requests
-can come in the fol- lowing ways: An (x,y,) trajectory, i.e., a set of
-(x,y,) states with an associated time; An (x,y,) path with a fixed
+can come in the following ways: An (x,y) trajectory, i.e., a set of
+(x,y,) states with an associated time; An (x,y) path with a fixed
 velocity; A GPS trajectory, with an associated time; A GPS path with a
-fixed velocity.
+fixed velocity. Ideally, we will integrate the controller developed by 
+Master Thesis student Goncalo, which is studying novel ways of 
+controlling the RCV. In case his end product does not meet the necessary
+requirements, we will develop our own controller.
+
 
 A simple odometry/Information system will also be implemented, it will
 be responsible from broadcasting general information about the car
@@ -204,6 +206,10 @@ such as its position and velocities from lower level components to
 ROS. Not much state estimation effort will be put into it, it will
 simply make use of the existing GPS/IMU to generate odometry
 information.
+
+The aim is that the control module will enable plug-and-play vehicle
+usage for a wide range of applications (including Andreas' and Karl's 
+mapping and planning application).
 
 * Nils and Xi: Integrate ROS NDT framework from Örebro in order to do
   mapping and localization of the vehicle.
@@ -229,8 +235,8 @@ can be used to provide a local grid map for planning.
 * Erik: Risk inference in intersection using probabilistic modeling of
   other vehicle's future motion.
 
-* Rui: Lateral/longitudinal path following control, interface with
-  lower level systems of the RCV to ROS.
+* Lars/Rui: Lateral/longitudinal path following control, interface with
+  lower level systems of the RCV to ROS. 
 
 ### Learning outcomes
 
@@ -279,6 +285,19 @@ can be used to provide a local grid map for planning.
   I also hope to learn more about the Velodyne sensor and how it might
   be applicable to my work on indoor mobile robots.
 
+* Lars: I aim for further insights in two major areas. The first being the 
+  area of path and trajectory control of autonomous vehicles and the second being 
+  the control architecture and integration aspects concerning complex 
+  automated systems. Furthermore I hope to learn more about ROS in general
+  as well as the subjects of the other students. 
+
+* Rui: In the past I have developed control algorithms for autonomous
+  car-like vehicles in safe scenarios (simulated and scaled environments), 
+  with this project with I hope to learn how to make these algorithms work
+  in the real world under real time constraints and with safety guarantees.
+  Furthermore I will have the opportunity to learn how can the interactions
+  with other systems , e.g., replanning while driving, might affect/destabilize
+  the controller performance.
 ### Deliverables
 
 Demo at Arlanda Test Track that demonstrates that the integrated
