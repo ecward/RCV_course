@@ -180,7 +180,7 @@ where we verify the gradual progress towards a working system.
 In the first milestones we primarily aim to evaluate the basic navigation components
 and message communication as the rest of the system relies on these components.
 
-\subsection{Milestone 1: March 31, Data Collection}
+\subsection{Milestone 1: Data Collection, March 31}
 \label{milestone1}
 
 In this milestone we will evaluate several components of the underlying platform.
@@ -193,7 +193,7 @@ In this milestone we will evaluate several components of the underlying platform
 \item A proof of concept of a path following algorithm
 \end{enumerate}
 
-\subsection{Milestone 2: April 30, Simple Demo \& Visualization}
+\subsection{Milestone 2: Simple Demo \& Visualization, April 30}
 \label{milestone2}
 
 In the second milestone we will demonstrate some basic navigation capability.
@@ -208,7 +208,7 @@ obstacl
 \item Ground plane estimation is working
 \end{enumerate}
 
-\subsection{Milestone 3: May 31, Scenario Attempt}
+\subsection{Milestone 3: Scenario Attempt, May 31}
 \label{milestone3}
 
 For this last milestone we will attempt both of the scenarios, enabling
@@ -370,13 +370,15 @@ The RCV will contain two RGB cameras, set up for stereo using an arduino to perf
 \begin{description}
 \item[Participants] Nils, Silvia
 \item[Summary]
-\item[Input]
-\item[Output]
+\item[Input] Velodyne data, odometry, ground plane estimation
+\item[Output] Detection \& tracking of dynamic obstacles in Velodyne data
 \item[Tasks for Integration Milestones]:\
 	\begin{description}
-		\item[Milestone 1]
-		\item[Milestone 2]
-		\item[Milestone 3] 
+		\item[Milestone 1] ROS Interfaces established, visualization components in place
+		\item[Milestone 2] Ground plane estimation integrated, basic tracking of dynamic obstacles \&
+						   proof of concept implementation of recognition of humans and cars in point clouds building on \cite{}.
+		\item[Milestone 3] Fuse the detection in stereo images and point clouds. Provide dynamic obstacles
+						   with velocity and heading to the planner.
 	\end{description}	 
 \end{description}
 
