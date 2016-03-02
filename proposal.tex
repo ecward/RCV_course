@@ -184,7 +184,15 @@ and message communication as the rest of the system relies on these components.
 \label{milestone1}
 
 In this milestone we will evaluate several components of the underlying platform.
+Most importantly, we will set up machines and sensors to communicate with each
+other using ROS message protocols. An important aspect of this is timestamping
+of individual message. We will evaluate if can use GPS for this and if we need
+more than one GPS unit. The message types and topics for all the different sensors
+will be decided and implemented. This will enable us to gather data from a run
+at the Arlanda test track. The data should be saved in a ROS bag format, enabling
+all project participants to simply play back the data to recreate the drive.
 
+The following explicit goals have been established for this mile stone:
 \begin{enumerate}
 \item ROS Interfaces for the sensors on the car, including encoders, heading, GPS and IMU
 \item ROS Interfaces for the perception components, i.e. message types and names
@@ -198,23 +206,27 @@ In this milestone we will evaluate several components of the underlying platform
 
 In the second milestone we will demonstrate some basic navigation capability.
 The car will drive on a lane at the test track. At one point an
-obstacl
+obstacle appears on the track and the planner will have to take the costmap
+into account by providing a path around to the path following controller.
 
+The milestone includes the following integration tasks:
 \begin{enumerate}
-\item Robot able to follow path provided by planner
+\item Robot us able to follow path provided by planner
 \item Planner able to plan on obstacle costmap populated by global static map and laser
 \item We are able to track dynamic obstacles in the Velodyne data
 \item There is some humans and car detection from stereo images
 \item Ground plane estimation is working
 \end{enumerate}
 
-\subsection{Milestone 3: Scenario Attempt, May 31}
+\subsection{Milestone 3: Scenario Integration, May 31}
 \label{milestone3}
 
 For this last milestone we will attempt both of the scenarios, enabling
 us to verify the system performance and work out any remaining problems
-before the final scenario demos.
+before the final scenario demos. This milestone will have a strong
+focus on integration of existing components.
 
+This final integration milestone enables us to test a more fully integrated system, including:
 \begin{enumerate}
 \item Planner will work on costmap with static obstacles and dynamic obstacles from detection and tracking
 \item GPS and point cloud/odometry localization are integrated
@@ -327,13 +339,13 @@ before the final scenario demos.
 \begin{description}
 \item[Participants] Nils, Xi, Johan
 \item[Summary]
-\item[Input]
-\item[Output]
+\item[Input] Point clouds, cameras, GPS, odometry, ground plane estimation, road/off-road labelling
+\item[Output] Localization in global map, obstacle costmap
 \item[Tasks for Integration Milestones]:\
 	\begin{description}
-		\item[Milestone 1]
-		\item[Milestone 2]
-		\item[Milestone 3] 
+		\item[Milestone 1] Data collection, proof of concept point cloud localization
+		\item[Milestone 2] Provide costmap to planner
+		\item[Milestone 3] Integrate road labelling from WP8.
 	\end{description}	 
 \end{description}
 
