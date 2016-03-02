@@ -1,6 +1,8 @@
 \documentclass[11pt,a4paper]{article}
 \usepackage{listings}
 \usepackage{hyperref}
+\usepackage[toc,page]{appendix}
+\usepackage{graphicx}
 
 \title{RCV Course Project Proposal}
 
@@ -244,29 +246,42 @@ This final integration milestone enables us to test a more fully integrated syst
 
 \begin{description}
 \item[Participants] Erik, Johan, Rui, Lars
-\item[Summary] Sensor and actuator interfaces via CAN are
-  handled by real time computer running XPC target. In order to interface
-  with the rest of the system a ROS interface is to be developed such
-  that sensor data is made available as ROS messages and an interface
-  to the path following controller is available as a ROS topic. In this
-  work package we will define ROS messages, and write the necessary
-  software for converting messages sent over various Ethernet based
-  protocols from GOAT to ROS messages. In addition, managing time
-  synchronization, where a GPS device is used as a master clock for the
-  system, is part of this work package.
+\item[Summary] In this work package the overall RCV-specific system architecture will be developed.
 
-  This work package also includes connecting the various computers and
-  sensors and constructing mounting points for sensors on the RCV.
+%The greater part of this WP will focus on correctly interfacing with the different sensors and actuators on the RCV, and making them available for use through a ROS interface.
+
+In this WP we will focus on correctly interfacing with the different sensors and actuators on the RCV, and making them available for use through a ROS interface.
+
+This ROS interface will be developed such that sensor data is made available through ROS topics and an interface to the path following controller (to be developed in WP3) is available as a ROS service.
+
+A detailed explanation of overall RCV system architecture to be developed in this WP is given in \ref{sec:system_structure_appendix}.
+
+The issue of time synchronization between multiple computers on the RCV will be tackled. A GPS device will be set up such that it acts as a master clock for the whole system.
+
+This work package also includes the mounting of the new sensors to be used in the RCV.
+
+%This Sensor and actuator interfaces via CAN are
+%  handled by real time computer running XPC target. In order to interface
+%  with the rest of the system a ROS interface is to be developed such
+%  that sensor data is made available as ROS messages and an interface
+%  to the path following controller is available as a ROS topic. In this
+%  work package we will define ROS messages, and write the necessary
+%  software for converting messages sent over various Ethernet based
+%  protocols from GOAT to ROS messages. In addition, managing time
+%  synchronization, where a GPS device is used as a master clock for the
+%  system, is part of this work package.
+
+  %This work package also includes connecting the various computers and
+  %sensors and constructing mounting points for sensors on the RCV.
    
 \item[Input] -
-\item[Output] ROS messages for module communication
+\item[Output] Well defined ROS interface for sending path following tasks to the RCV and a functional ROS interface for accessing the vehicle sensor readings.
 \item[Tasks for Integration Milestones]:\
 	\begin{description}
-		\item[Milestone 1] Define ROS interfaces and topics. Software to decode data from the real time computer. 
-
+		\item[Milestone 1] Well defined and functioning ROS interfaces for the RCV sensor readings. 40h
   Network Time Protocol (NTP) set up for time synchronization. 10 h
-		\item[Milestone 2]
-		\item[Milestone 3] 
+		\item[Milestone 2] Well defined and functioning ROS interface for issuing trajectory commands to the RCV. 2h
+		\item[Milestone 3] None
 	\end{description}	 
 \end{description}
 
@@ -656,6 +671,12 @@ in the real world under real time constraints and with safety guarantees.
 Furthermore I will have the opportunity to learn how can the interactions
 with other systems , e.g., replanning while driving, might affect/destabilize
 the controller performance.
+
+\newpage
+\begin{appendices}
+\input{SystemStructureAppendix}
+\end{appendices}
+
 
 \end{itemize}
 \bibliographystyle{plain}
