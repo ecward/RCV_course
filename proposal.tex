@@ -185,7 +185,15 @@ and message communication as the rest of the system relies on these components.
 \label{milestone1}
 
 In this milestone we will evaluate several components of the underlying platform.
+Most importantly, we will set up machines and sensors to communicate with each
+other using ROS message protocols. An important aspect of this is timestamping
+of individual message. We will evaluate if can use GPS for this and if we need
+more than one GPS unit. The message types and topics for all the different sensors
+will be decided and implemented. This will enable us to gather data from a run
+at the Arlanda test track. The data should be saved in a ROS bag format, enabling
+all project participants to simply play back the data to recreate the drive.
 
+The following explicit goals have been established for this mile stone:
 \begin{enumerate}
 \item ROS Interfaces for the sensor data from the RCV platform. The sensor data includes wheel encoder data, position and heading from GPS and acceleration and angular velocity from IMU.
 \item ROS Interfaces for the perception components, i.e. message types and names
@@ -200,8 +208,10 @@ In this milestone we will evaluate several components of the underlying platform
 
 In the second milestone we will demonstrate some basic navigation capability.
 The car will drive on a lane at the test track. At one point an
-obstacle will appear.
+obstacle appears on the track and the planner will have to take the costmap
+into account by providing a path around to the path following controller.
 
+The milestone includes the following integration tasks:
 \begin{enumerate}
 \item Robot able to follow a simple path provided by the planner
 \item Planner able to plan on obstacle costmap populated by global static map and laser
@@ -210,13 +220,15 @@ obstacle will appear.
 \item Ground plane estimation is working
 \end{enumerate}
 
-\subsection{Milestone 3: Scenario Attempt, May 31}
+\subsection{Milestone 3: Scenario Integration, May 31}
 \label{milestone3}
 
 For this last milestone we will attempt both of the scenarios, enabling
 us to verify the system performance and work out any remaining problems
-before the final scenario demos.
+before the final scenario demos. This milestone will have a strong
+focus on integration of existing components.
 
+This final integration milestone enables us to test a more fully integrated system, including:
 \begin{enumerate}
 \item Planner will work on costmap with static obstacles and dynamic obstacles from detection and tracking
 \item GPS and point cloud/odometry localization are integrated
@@ -336,14 +348,26 @@ Feasible trajectory (WP2)
 
 \begin{description}
 \item[Participants] Nils, Xi, Johan
-\item[Summary]
-\item[Input]
-\item[Output]
+\item[Summary] To be able to navigate along a road and in a parking lot, the car will have to know its 
+			   position with respect to the road and its surroundings. It also needs to know if there
+			   are obstacles blocking its movement so it can wait or adapt its movement.
+			   To this end, we will build a map of the test area using the point clouds from the
+			   velodyne. An initial map will be built in an offline manner, using GPS data and possibly
+			   IMU and/or odometry. We will then use a framework such as NDT-MCL \cite{saarinen2013normal} 
+			   to localize, as a recent study \cite{magnusson2015beyond} has demonstrated good results
+			   in similar scenarios. If precision is not sufficient we may use e.g. \cite{Zhang_DEMO},
+			   which combines the point clouds with visual information to provide odometry estimates.
+			   The position in the global map together
+			   with the sensor reading will be combined to create an obstacle costmap for the planner.
+			   In the end, we will also integrate the road/off-road labelling in this costmap.
+				
+\item[Input] Point clouds, cameras, GPS, odometry, ground plane estimation, road/off-road labelling
+\item[Output] Localization in global map, obstacle costmap
 \item[Tasks for Integration Milestones]:\
 	\begin{description}
-		\item[Milestone 1]
-		\item[Milestone 2]
-		\item[Milestone 3] 
+		\item[Milestone 1] Data collection, construction of global map for localization
+		\item[Milestone 2] Localize in global map, provide costmap to planner
+		\item[Milestone 3] Integrate road labelling from WP8.
 	\end{description}	 
 \end{description}
 
@@ -390,7 +414,8 @@ The RCV will contain two RGB cameras, set up for stereo using an arduino to perf
 	\begin{description}
 		\item[Milestone 1] ROS Interfaces established, visualization components in place
 		\item[Milestone 2] Ground plane estimation integrated, basic tracking of dynamic obstacles \&
-						   proof of concept implementation of recognition of humans and cars in point clouds building on \cite{}.
+						   proof of concept implementation of recognition of humans and cars in point 
+						   clouds building on \cite{wang2015voting}.
 		\item[Milestone 3] Fuse the detection in stereo images and point clouds. Provide dynamic obstacles
 						   with velocity and heading to the planner.
 	\end{description}	 
