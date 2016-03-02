@@ -212,7 +212,7 @@ almost walking pace as in scenario 1.
 \subsection{Localization \& Mapping}
 
 \begin{description}
-\item[Participants] Nils, Xi
+\item[Participants] Nils, Xi, Johan
 \item[Summary]
 \item[Input]
 \item[Output]
@@ -225,17 +225,30 @@ almost walking pace as in scenario 1.
 \end{description}
 
 \subsection{Cameras} % calibration and depth estimation
-
 \begin{description}
 \item[Participants] Johan, Silvia
 \item[Summary]
+
+The RCV will contain two RGB cameras, set up for stereo using an arduino to perform the synchronized triggering of the cameras. The system will perform stereo matching using off-the-shelf available algorithms available in OpenCV and ROS. The RCV will also contain other sensors such as two Velodyne lidar sensors and a GPS. These sensors will have to be intrinsically and extrinsically calibrated to find the relative poses of the sensors in the RCV coordinate system. Solving these tasks, we look to apply previously developed work by Johan. 
+
 \item[Input]
+	Lidar pointclouds
+	GPS position
 \item[Output]
+	TF of extrinsically calibrated sensor setup.
+	Syncronized RGB images
+	Disparity map/pointclouds for one or two of the RGB images, found using stereo matching
 \item[Tasks for Integration Points]:\
 	\begin{description}
 		\item[Milestone 1]
+			Data recording possible.
+			Stereo setup in place, with synchronized image triggering.
 		\item[Milestone 2]
-		\item[Milestone 3] 
+			Disparity map/pointclouds created using stereo vision.
+			Pointcloud registration usable to extrinsically calibrate lidar sensors available.
+		\item[Milestone 3]
+			Improved and tuned Disparity map/pointclouds created using stereo vision.
+			Good estimate of stereo and lidar system TF.
 	\end{description}	 
 \end{description}
 
