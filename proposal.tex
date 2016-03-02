@@ -54,23 +54,41 @@ autonomy in some limited scenarios.
 
 In this project the aim is to provide sufficient autonomy for two
 types of scenarios involving the RCV and other traffic participants.
+For both types of scenarios we assume we have driven the RCV manually
+in the area where experiments are performed beforehand in order to
+collect data to map the environment.
 
-\begin{itemize}
-\item 
-Parking lot (open area) navigation. The RCV should handle
-navigating, at low speeds, to a defined pose, e.g. a
-specific parking space, while avoiding collisions with static obstacles
-and pedestrians.
+\begin{enumerate}
+\item  Parking lot (Open area) navigation. The RCV should handle navigating,
+at low speeds, to a defined pose, e.g. a specific parking space, while
+avoiding collisions with static obstacles and pedestrians. Navigation
+can include both forward an backward motion and the precision
+required for successfully reaching the goal pose is set to be
+sufficent for the RCV to get into normal size parking pocket. No
+parallel parking is assumed to be necessary.
 
-\item 
-Junction navigation. The RCV should successfully handle a T-junction
+We assume that there are no major differences in the appereance of the
+parking lot from the time the area was mapped. Only small differences
+such as one or two parked cars which where not present during mapping
+are assumed. For instance this would not allow there to be a
+significant amount of snow present whilst the area was mapped during
+dry, warm conditions.
+
+The number of dynamic objects are assumed to be few and move at a 
+walking pace, e.g. up to three pedestrians are walking on the parking lot.
+
+
+\item  Junction navigation. The RCV should successfully handle a T-junction
 scenario where another car is driving through the junction and the
 goal of the RCV is to make a left or right turn through the
 junction. Here the speeds of the RCV and the other car is
 significantly higher than in scenario 1., e.g. 10 m/s rather than
 almost walking pace as in scenario 1.
 
-\end{itemize}
+In this scenario, only one other car is present, no other moving
+objects such as pedestrains are considered here.
+
+\end{enumerate}
 
 The most fundamental requirements for these scenarios is perception
 algorithms that can estimate the drive-able surface relative to the RCV,
@@ -130,24 +148,30 @@ state estimation of the RCV.
 
 \section{Deliverables}
 
-Demo at Arlanda Test Track that demonstrates that the integrated
+Demos at Arlanda Test Track that demonstrates that the integrated
 components can handle the scenarios described in the intended
 functionality section:
 
 \begin{itemize}
-\item 
-Parking lot (open area) navigation. The RCV should handle
-navigating, at low speeds, to a defined pose, e.g. a
-specific parking space, while avoiding collisions with static obstacles
-and pedestrians.
 
-\item 
-Junction navigation. The RCV should successfully handle a T-junction
-scenario where another car is driving through the junction and the
-goal of the RCV is to make a left or right turn through the
-junction. Here the speeds of the RCV and the other car is
-significantly higher than in scenario 1., e.g. 10 m/s rather than
-almost walking pace as in scenario 1.
+\item Basic parking lot navigation. The RCV should navigate at low speeds 
+  to a defined goal pose, given as input from a user. Here we assume there
+  are no dynamic obstacles.
+
+\item Parking lot navigation with dynamic obstacles. Same as above except that 
+  there are a few pedestrians walking around.
+
+\item Basic junction navigation. The RCV should successfully drive
+  trough an empty T-junction, staying close to the center of the right
+  lane leading up to the intersection and follow a natural path trough the intersection.
+  If an object is blocking part of the road for the RCV it will deviate from the center of the
+  lane, as long as we can stay within the road boundary, in order to pass the obstacle.
+
+\item Junction navigation. The RCV should successfully negotiate a
+  T-junction scenario where another car is driving through the
+  junction and the goal of the RCV is to make a left or right turn
+  through the junction. Here we assume that there are no
+  other obstacles on the road.
 
 \end{itemize}
 
@@ -164,37 +188,83 @@ almost walking pace as in scenario 1.
 
 \section{Work Packages}
 
-\subsection{Platform} % and data interfaces
+\subsection{WP1 Platform} % and data interfaces
 
 \begin{description}
-\item[Participants] Erik, Rui, Johan
-\item[Summary]
-\item[Input]
-\item[Output]
+\item[Participants] Erik, Johan, Rui
+\item[Summary] Low level control and sensor inferfaces via CAN are
+  handled by GOAT (?)  a ? running XPC target. In order to interface
+  with the rest of the system a ROS interface is to be developed such
+  that sensor data is made available as ROS messages and an interface
+  to the path following controller is avaialbe as a ROS topic. In this
+  work package we will define ROS messages, and write the necessecary
+  software for converting messages sent over various ethernet based
+  protocols from GOAT to ROS messages. In addition, managing time
+  synchronization, where a GPS device is used a master clock for the
+  system, is part of this work package.
+
+  This work package also inclues connecting the various computers and
+  sensors and constructing mounting points for sensors on the RCV.
+   
+\item[Input] List of waypoints defining a trajectory to follow. Data from 
+  GOAT over ethernet.
+\item[Output] ROS messages for different sensor readings...
 \item[Tasks for Integration Points]:\
 	\begin{description}
-		\item[Milestone 1]
+		\item[Milestone 1] ROS .msg files defining the interfaces, and documentation of which topics
+  are used. Software to decode data from the GOAT. 
+
+  Network Time Protocol (NTP) set up for time synchronization. 10 h
 		\item[Milestone 2]
 		\item[Milestone 3] 
 	\end{description}	 
 \end{description}
 
-\subsection{Planner}
+\subsection{WP2 Planner}
 
 \begin{description}
-\item[Participants] Erik, Rui, Johan
-\item[Summary]
-\item[Input]
-\item[Output]
+\item[Participants] Erik, Niclas
+\item[Summary] The planner workpackage is divided into two parts, one
+  for structured environments where a well-defined road network is
+  available and one for unstructured environments where no road
+  network exists e.g. a parking lot. In structured environments parts
+  of the approach presented by Werling [ref] will be implemented to
+  handle dynamic traffic scenarios. A bundle of candidate trajectories
+  are generated and scored according to a cost function and the best
+  trajectory is sent to the low level controllers. In open
+  environments a search algorithm will be used to generate an obstacle
+  free path from the starting point to a goal point and this path will
+  then be used by the Werling planner so dynamics obstacles can be
+  handled.
+
+  Dynamic objects will be handled by using trajectory predcitions based 
+  on tracked objects and selecting a suitible trajectory from the ones
+  generated using the Werling planner.
+  
+\item[Input] Occupancy map (WP6), State estimation (WP4), Tracked objects (WP5)
+\item[Output] Feasible trajectory defined in UTM coordinates
 \item[Tasks for Integration Points]:\
 	\begin{description}
-		\item[Milestone 1]
-		\item[Milestone 2]
-		\item[Milestone 3] 
+		\item[Milestone 1] Define ROS-interfaces for output
+                  and input 2h Decide on a planner implementation to
+                  use for unstructured area planning. Suggested
+                  candidates are: Hybrid A* implementation from
+                  current master thesis work by Karl Kurzer, iQMatic
+                  RRT implementation or ROS move\_base planning
+                  package. 5h Implement a first version of the werling
+                  planner that can handle static obstacles in a
+                  simulation environment 20h
+		\item[Milestone 2] simulation scenario from integration
+                  point 2 to be run on real car but with simulated
+                  static obstacles 20h Integration of planner for
+                  unstructured environments started 10h
+		\item[Milestone 3] Dynamic and static obstacles from
+                  sensor data integrated in the Werling planner. 80h
+                  Planner for unstructured environments integrated 10h
 	\end{description}	 
 \end{description}
 
-\subsection{Controller}
+\subsection{WP3 Controller}
 
 \begin{description}
 \item[Participants] Lars, Rui
@@ -209,7 +279,7 @@ almost walking pace as in scenario 1.
 	\end{description}	 
 \end{description}
 
-\subsection{Localization \& Mapping}
+\subsection{WP4 Localization \& Mapping}
 
 \begin{description}
 \item[Participants] Nils, Xi, Johan
@@ -252,7 +322,7 @@ The RCV will contain two RGB cameras, set up for stereo using an arduino to perf
 	\end{description}	 
 \end{description}
 
-\subsection{Point Cloud Tracking}
+\subsection{WP5 Point Cloud Tracking}
 
 \begin{description}
 \item[Participants] Nils, Silvia
@@ -288,7 +358,7 @@ The RCV will contain two RGB cameras, set up for stereo using an arduino to perf
 	\end{description}	 
 \end{description}
 
-\subsection{Semantic Labelling} %
+\subsection{WP6 Semantic Labelling} %
 
 \begin{description}
 \item[Participants] Xi
