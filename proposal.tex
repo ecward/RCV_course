@@ -153,14 +153,47 @@ almost walking pace as in scenario 1.
 
 \section{Integration Milestones}
 
-\subsection{Milestone 1: March 31}
+To make sure that our work towards the scenarios progress as planned and that
+we do not get stuck at unforeseen obstacles, we plan to have several milestones
+where we verify the gradual progress towards a working system.
+In the first milestones we primarily aim to evaluate the basic navigation components
+and message communication as the rest of the system relies on these components.
+
+\subsection{Milestone 1: March 31, Data Collection}
 \label{milestone1}
 
-\subsection{Milestone 2: April 30}
+In this milestone we will evaluate several components of the underlying platform.
+
+\begin{enumerate}
+\item ROS Interfaces for the sensors on the car, including encoders, heading, GPS and IMU
+\item ROS Interfaces for the perception components, i.e. message types and names
+\item Establish that we can gather data from the car using ROS components for offline analysis
+\item Decide which free space planner we will use for the parking lot scenario
+\item A proof of concept of a path following algorithm
+\end{enumerate}
+
+\subsection{Milestone 2: April 30, Simple Demo \& Visualization}
 \label{milestone2}
 
-\subsection{Milestone 3: May 31}
+In the second milestone we will demonstrate some basic navigation capability.
+The car will drive on a lane at the test track. At one point an
+obstacl
+
+\begin{enumerate}
+\item 
+\item Ground plane estimation is working
+\end{enumerate}
+
+\subsection{Milestone 3: May 31, Scenario Attempt}
 \label{milestone3}
+
+\begin{enumerate}
+\item Planner will work on costmap with static obstacles and dynamic obstacles from detection and tracking
+\item GPS and point cloud/odometry localization are integrated
+\item Stereo data is used to complete the Velodyne point cloud
+\item Tracking in stereo and Velodyne data produce a joint output
+\item Road/offroad labelling is integrated into the costmap
+\end{enumerate}
 
 \section{Work Packages}
 
@@ -174,7 +207,7 @@ almost walking pace as in scenario 1.
 \item[Tasks for Integration Points]:\
 	\begin{description}
 		\item[Milestone 1]
-		\item[Milestone 2]
+		\item[Milestone 2] 
 		\item[Milestone 3] 
 	\end{description}	 
 \end{description}
