@@ -272,13 +272,19 @@ The RCV will contain two RGB cameras, set up for stereo using an arduino to perf
 \begin{description}
 \item[Participants] Silvia, Nils
 \item[Summary]
+	Using the data provided by the stereo camera system and the Velodyne Lidar sensors, objects and obstacles will be identified in the images and pointclouds. Objects of interest are cars and pedestrians. For detection in images, the solutions available exploiting the OpenCV library (e.g. built-in method for pedestrian detection) will be used. 
 \item[Input]
+	Lidar pointclouds and Stereo camera images.
 \item[Output]
+	Pose information of detected instances of obstacles and classes of objects of interest. Approximate extent of the objects in terms of a bounding box.
 \item[Tasks for Integration Points]:\
 	\begin{description}
 		\item[Milestone 1]
+			Data collection and ROS Interface setup.
 		\item[Milestone 2]
-		\item[Milestone 3] 
+			Detection of Objects in the stereo camera images through standard OpenCV algorithms. Detection of obstacles in the pointcloud.
+		\item[Milestone 3]
+			Fusion of the detection in the stereo camera images and in the Lidar pointcloud.
 	\end{description}	 
 \end{description}
 
