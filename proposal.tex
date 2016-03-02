@@ -338,13 +338,22 @@ This final integration milestone enables us to test a more fully integrated syst
 
 \begin{description}
 \item[Participants] Nils, Xi, Johan
-\item[Summary]
+\item[Summary] To be able to navigate along a road and in a parking lot, the car will have to know its 
+			   position with respect to the road and its surroundings. It also needs to know if there
+			   are obstacles blocking its movement so it can wait or adapt its movement.
+			   To this end, we will build a map of the test area using the point clouds from the
+			   velodyne. An initial map will be built in an offline manner, using GPS data and possibly
+			   IMU and/or odometry. We will then use a framework such as \cite{} or \cite{} to
+			   localize, depending on which works better. The position in the global map together
+			   with the sensor reading will be combined to create an obstacle costmap for the planner.
+			   In the end, we will also integrate the road/off-road labelling in this costmap.
+				
 \item[Input] Point clouds, cameras, GPS, odometry, ground plane estimation, road/off-road labelling
 \item[Output] Localization in global map, obstacle costmap
 \item[Tasks for Integration Milestones]:\
 	\begin{description}
-		\item[Milestone 1] Data collection, proof of concept point cloud localization
-		\item[Milestone 2] Provide costmap to planner
+		\item[Milestone 1] Data collection, construction of global map for localization
+		\item[Milestone 2] Localize in global map, provide costmap to planner
 		\item[Milestone 3] Integrate road labelling from WP8.
 	\end{description}	 
 \end{description}
