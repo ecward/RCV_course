@@ -34,6 +34,7 @@ Course integration repository:
 \item Niclas Evestedt, Automatic Control LiU
 \item Rui Oliveira, Automatic Control KTH
 \item Erik Ward, CVAP KTH
+\item Lars Svensson, Mechatronics KTH
 \end{itemize}
 
 \section{Background}
@@ -186,11 +187,12 @@ and message communication as the rest of the system relies on these components.
 In this milestone we will evaluate several components of the underlying platform.
 
 \begin{enumerate}
-\item ROS Interfaces for the sensors on the car, including encoders, heading, GPS and IMU
+\item ROS Interfaces for the sensor data from the RCV platform. The sensor data includes wheel encoder data, position and heading from GPS and acceleration and angular velocity from IMU.
 \item ROS Interfaces for the perception components, i.e. message types and names
 \item Establish that we can gather data from the car using ROS components for offline analysis
 \item Decide which free space planner we will use for the parking lot scenario
-\item A proof of concept of a path following algorithm
+% Lars and Rui finds that this milestone will not be critical at this point
+%\item A proof of concept of a path following algorithm
 \end{enumerate}
 
 \subsection{Milestone 2: Simple Demo \& Visualization, April 30}
@@ -198,10 +200,10 @@ In this milestone we will evaluate several components of the underlying platform
 
 In the second milestone we will demonstrate some basic navigation capability.
 The car will drive on a lane at the test track. At one point an
-obstacl
+obstacle will appear.
 
 \begin{enumerate}
-\item Robot able to follow path provided by planner
+\item Robot able to follow a simple path provided by the planner
 \item Planner able to plan on obstacle costmap populated by global static map and laser
 \item We are able to track dynamic obstacles in the Velodyne data
 \item There is some humans and car detection from stereo images
@@ -221,6 +223,7 @@ before the final scenario demos.
 \item Stereo data is used to complete the Velodyne point cloud
 \item Tracking in stereo and Velodyne data produce a joint output
 \item Road/offroad labelling is integrated into the costmap
+\item Controller able to perform path following with satisfactory precision for paths with high velocity and turning rate
 \end{enumerate}
 
 \section{Work Packages}
@@ -228,9 +231,9 @@ before the final scenario demos.
 \subsection{WP1 Platform} % and data interfaces
 
 \begin{description}
-\item[Participants] Erik, Johan, Rui
-\item[Summary] Low level control and sensor interfaces via CAN are
-  handled by GOAT (?)  a ? running XPC target. In order to interface
+\item[Participants] Erik, Johan, Rui, Lars
+\item[Summary] Sensor and actuator interfaces via CAN are
+  handled by real time computer running XPC target. In order to interface
   with the rest of the system a ROS interface is to be developed such
   that sensor data is made available as ROS messages and an interface
   to the path following controller is available as a ROS topic. In this
@@ -247,7 +250,7 @@ before the final scenario demos.
 \item[Output] ROS messages for module communication
 \item[Tasks for Integration Milestones]:\
 	\begin{description}
-		\item[Milestone 1] Define ROS interfaces and topics. Software to decode data from the GOAT. 
+		\item[Milestone 1] Define ROS interfaces and topics. Software to decode data from the real time computer. 
 
   Network Time Protocol (NTP) set up for time synchronization. 10 h
 		\item[Milestone 2]
@@ -312,13 +315,20 @@ before the final scenario demos.
 \begin{description}
 \item[Participants] Lars, Rui
 \item[Summary]
+The controller work package will have the main objective of providing a practical trajectory following control functionality. The controller will receive a path in UTM coordinates with a corresponding velocity profile or a time reference for every point of the path. If possible, the control strategy developed within the GCDC project will be modified and used, otherwise a new controller will be developed. Possible alternatives are found in \cite{werling2010tracking} and \cite{lima2015}. In practice, the work will be divided into three parts. Deciding on a control strategy, conditioning of input signals and controller implementation. 
 \item[Input]
-\item[Output]
+Feasible trajectory (WP2)
+\item[Output] -
 \item[Tasks for Integration Milestones]:\
 	\begin{description}
-		\item[Milestone 1]
-		\item[Milestone 2]
-		\item[Milestone 3] 
+		\item[Milestone 1] Decide on control strategy and signal conditioning \\
+			For this milestone we aim to have determined whether the GCDC controller can be reused 
+			and have arrived at a clearly defined control strategy. Furthermore, the signal conditioning 
+			of the inputs, i.e extracting control errors etc. from available data, shall be done. 
+		\item[Milestone 2] Controller implemented\\
+			For milestone 2 we aim to have a functioning controller implemented and ready for initial testing
+		\item[Milestone 3] Controller iterated and tuned\\
+			At this point the controller shall be performing satisfactorily for the demo
 	\end{description}	 
 \end{description}
 
@@ -605,6 +615,22 @@ Nils: Understand more about how deep learning methods function, as applied
 to detection scenarios, in this case cars, pedestrians and bicycles.
 I also hope to learn more about the Velodyne sensor and how it might
 be applicable to my work on indoor mobile robots.
+
+\item
+Lars: I aim for further insights in two major areas. The first being the 
+area of path and trajectory control of autonomous vehicles and the second being 
+the control architecture and integration aspects concerning complex 
+automated systems. Furthermore I hope to learn more about ROS in general
+as well as the subjects of the other students. 
+
+\item
+Rui: In the past I have developed control algorithms for autonomous
+car-like vehicles in safe scenarios (simulated and scaled environments), 
+with this project with I hope to learn how to make these algorithms work
+in the real world under real time constraints and with safety guarantees.
+Furthermore I will have the opportunity to learn how can the interactions
+with other systems , e.g., replanning while driving, might affect/destabilize
+the controller performance.
 
 \end{itemize}
 \bibliographystyle{plain}
