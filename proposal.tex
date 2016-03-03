@@ -181,7 +181,7 @@ A number of intermediate milestones has been defined in order to verify the grad
 In the first milestones we primarily aim to evaluate the basic navigation components
 and message communication as the rest of the system relies on these components.
 
-\subsection{Milestone 1: Data Collection, March 31}
+\subsection{Milestone 1: Data Collection, March 25}
 \label{milestone1}
 
 In this milestone several components of the underlying platform will be evaluated.
@@ -189,7 +189,7 @@ Most importantly, communication using ROS message protocols between computers an
 %we will set up computers and sensors to communicate with each
 %other using ROS message protocols. 
 An important aspect of this is time-stamping
-of individual message. An evaluation of the use of the GPS-clock for time synchronisation will be done and also an evaluation to see if more than one GPS unit is needed.
+of individual messages. An evaluation of the use of the GPS-clock for time synchronisation will be done and also an evaluation to see if more than one GPS unit is needed.
 The message types and topics for all the different sensors
 will be decided and implemented at this point to enable for data collection at the Arlanda test track. The data should be saved in a ROS bag format, enabling
 all project participants to simply play back the data to recreate the drive. \\ \\
@@ -230,7 +230,7 @@ of a more fully integrated system, including:
 \item Planner will work on costmap with static obstacles and dynamic obstacles from detection and tracking
 \item GPS and point cloud/odometry localization are integrated
 \item Stereo data is used to complete the Velodyne point cloud
-\item Tracking in stereo and Velodyne data produce a joint output
+\item Tracking in stereo and Velodyne data produces a joint output
 \item Road/offroad labelling is integrated into the costmap
 \item Controller able to perform path following with satisfactory precision for paths with high velocity and turning rate
 \end{enumerate}
@@ -365,7 +365,7 @@ Feasible trajectory (WP2)
 			   are obstacles blocking its movement so it can wait or adapt its movement.
 			   To this end, a map of the test area using the point clouds from the
 			   Velodyne need to be created. An initial map will be built in an offline manner, using GPS data and possibly
-			   IMU and/or odometry. A framework such as NDT-MCL \cite{saarinen2013normal} 
+			   IMU and/or wheel odometry. A framework such as NDT-MCL \cite{saarinen2013normal} 
 			   will be used to localize, as a recent study \cite{magnusson2015beyond} has demonstrated good results
 			   in similar scenarios. If precision is not sufficient the work in e.g. \cite{Zhang_DEMO},
 			   which combines the point clouds with visual information to provide odometry estimates might be used to increase the accuracy.
@@ -426,11 +426,11 @@ The RCV will contain two RGB cameras, set up for stereo using an Arduino to perf
 \item[Tasks for Integration Milestones]:\
 	\begin{description}
 		\item[Milestone 1] ROS Interfaces established, visualization components in place 50h
-		\item[Milestone 2] Ground plane estimation integrated, basic tracking of dynamic obstacles 70h\\
+		\item[Milestone 2] Ground plane estimation integrated, basic tracking of dynamic obstacles 40h\\
 		
-						   Proof of concept implementation of recognition of humans and cars in point clouds building on \cite{wang2015voting}. 40h
+						   Proof of concept implementation of recognition of humans and cars in point clouds building on \cite{wang2015voting}. 60h
 		\item[Milestone 3] Fuse the detection in stereo images and point clouds. Provide dynamic obstacles
-						   with velocity and heading to the planner. 60h
+						   with velocity and heading to the planner. 20h
 	\end{description}	 
 \end{description}
 
