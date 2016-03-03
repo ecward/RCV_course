@@ -278,8 +278,9 @@ This work package also includes the mounting of the new sensors to be used in th
 \item[Output] Well defined ROS interface for sending path following tasks to the RCV and a functional ROS interface for accessing the vehicle sensor readings.
 \item[Tasks for Integration Milestones]:\
 	\begin{description}
-		\item[Milestone 1] Well defined and functioning ROS interfaces for the RCV sensor readings. 40h
-  Network Time Protocol (NTP) set up for time synchronization. 10 h
+		\item[Milestone 1] Well defined and functioning ROS interfaces for the RCV sensor readings. 40h\\
+  Network Time Protocol (NTP) set up for time synchronization. 10 h\\
+  Sensor mounts completed. 15 h 
 		\item[Milestone 2] Well defined and functioning ROS interface for issuing trajectory commands to the RCV. 2h
 		\item[Milestone 3] None
 	\end{description}	 
@@ -394,23 +395,23 @@ Feasible trajectory (WP2)
 The RCV will contain two RGB cameras, set up for stereo using an arduino to perform the synchronized triggering of the cameras. The system will perform stereo matching using off-the-shelf available algorithms available in OpenCV and ROS. The RCV will also contain other sensors such as two Velodyne lidar sensors and a GPS. These sensors will have to be intrinsically and extrinsically calibrated to find the relative poses of the sensors in the RCV coordinate system. Solving these tasks, we look to apply previously developed work by Johan. 
 
 \item[Input]
-	Lidar pointclouds
-	GPS position
+	Lidar pointclouds  \\
+	GPS position  \\
 \item[Output]
-	TF of extrinsically calibrated sensor setup.
-	Syncronized RGB images
-	Disparity map/pointclouds for one or two of the RGB images, found using stereo matching
+	TF of extrinsically calibrated sensor setup.  \\
+	Syncronized RGB images \\
+	Disparity map/pointclouds for one or two of the RGB images, found using stereo matching \\
 \item[Tasks for Integration Milestones]:\
 	\begin{description}
 		\item[Milestone 1]
-			Data recording possible.
-			Stereo setup in place, with synchronized image triggering.
+			Data recording possible. 20 h\\
+			Stereo setup in place, with synchronized image triggering. 60 h \\
 		\item[Milestone 2]
-			Disparity map/pointclouds created using stereo vision.
-			Pointcloud registration usable to extrinsically calibrate lidar sensors available.
+			Disparity map/pointclouds created using stereo vision. 20 h \\
+			Pointcloud registration usable to extrinsically calibrate lidar sensors available. 40 h \\
 		\item[Milestone 3]
-			Improved and tuned Disparity map/pointclouds created using stereo vision.
-			Good estimate of stereo and lidar system TF.
+			Improved and tuned Disparity map/pointclouds created using stereo vision. 20 h \\
+			Good estimate of stereo and lidar system TF. 20 h \\
 	\end{description}	 
 \end{description}
 
