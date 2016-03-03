@@ -25,7 +25,7 @@ Course group page:
 
 \url{https://www.kth.se/social/group/dd3356-rcv2016/}.
 
-Course integration repository:
+Project repository:
 
 \url{https://github.com/ecward/RCV_course}.
 
@@ -263,7 +263,7 @@ In this WP we will focus on correctly interfacing with the different sensors and
 
 This ROS interface will be developed such that sensor data is made available through ROS topics and an interface to the path following controller (to be developed in WP3) is available as a ROS service.
 
-A detailed explanation of overall RCV system architecture to be developed in this WP is given in \ref{sec:system_structure_appendix}.
+A detailed explanation of the overall RCV system architecture to be developed in this WP is given in \ref{sec:system_structure_appendix}.
 
 The issue of time synchronization between multiple computers on the RCV will be tackled. A GPS device will be set up such that it acts as a master clock for the whole system.
 
@@ -283,14 +283,14 @@ This work package also includes the mounting of the new sensors to be used in th
   %This work package also includes connecting the various computers and
   %sensors and constructing mounting points for sensors on the RCV.
    
-\item[Input] -
-\item[Output] Well defined ROS interface for sending path following tasks to the RCV and a functional ROS interface for accessing the vehicle sensor readings.
+\item[Input] None
+\item[Output] Well defined, but not functional, ROS interface for sending path following tasks to the RCV and a working ROS interface for accessing the vehicle sensor readings.
 \item[Tasks for Integration Milestones]:\
 	\begin{description}
-		\item[Milestone 1] Well defined and functioning ROS interfaces for the RCV sensor readings. 40h\\
+		\item[Milestone 1] Well defined and functioning ROS interfaces for the RCV sensor readings. (70h + 70h)\\
   Network Time Protocol (NTP) set up for time synchronization. 10 h\\
   Sensor mounts completed. 15 h 
-		\item[Milestone 2] Well defined and functioning ROS interface for issuing trajectory commands to the RCV. 2h
+		\item[Milestone 2] Well defined and functioning ROS interface for issuing trajectory commands to the RCV. (2h + 2h)
 		\item[Milestone 3] None
 	\end{description}	 
 \end{description}
@@ -352,20 +352,20 @@ This work package also includes the mounting of the new sensors to be used in th
 \begin{description}
 \item[Participants] Lars, Rui
 \item[Summary]
-The controller work package will have the main objective of providing a practical trajectory following control functionality. The controller will receive a path in UTM coordinates with a corresponding velocity profile or a time reference for every point of the path. If possible, the control strategy developed within the GCDC project will be modified and used, otherwise a new controller will be developed. Possible alternatives are found in \cite{werling2010tracking} and \cite{lima2015}. In practice, the work will be divided into three parts. Deciding on a control strategy, conditioning of input signals and controller implementation. 
+The controller work package will have the main objective of providing a practical trajectory following control functionality. The controller will receive a path in UTM coordinates with a corresponding velocity profile or a time reference for every point of the path. If possible, a control strategy developed for participating in the Grand Cooperative Driving Challenge \cite{gcdc_website} will be reused, otherwise a new controller will be developed. Possible controller alternatives are found in \cite{werling2010tracking} and \cite{lima2015}. In practice, the work will be divided into three parts. Deciding on a control strategy, conditioning of input signals and controller implementation. 
 \item[Input]
 Feasible trajectory (WP2)
-\item[Output] -
+\item[Output] Functioning Path Following Controller
 \item[Tasks for Integration Milestones]:\
 	\begin{description}
-		\item[Milestone 1] Decide on control strategy and signal conditioning \\
+		\item[Milestone 1] Deciding on the control strategy to be used and signal conditioning (20h + 20h)\\
 			For this milestone we aim to have determined whether the GCDC controller can be reused 
-			and have arrived at a clearly defined control strategy. Furthermore, the signal conditioning 
-			of the inputs, i.e extracting control errors etc. from available data, shall be done. 
-		\item[Milestone 2] Controller implemented\\
-			For milestone 2 we aim to have a functioning controller implemented and ready for initial testing
-		\item[Milestone 3] Controller iterated and tuned\\
-			At this point the controller shall be performing satisfactorily for the demo
+			and have arrived at a clearly defined control strategy. Furthermore, the signal conditioning  
+			of the inputs, i.e extracting necessary controller information from available data shall be done. 
+		\item[Milestone 2] Implementation of Controller (60h + 60h)\\
+			For milestone 2 we aim to have a functioning controller implemented and ready for initial testing 
+		\item[Milestone 3] Controller iterated and tuned (30h + 30h)\\
+			At this point the controller shall be performing satisfactorily for the proposed demos 
 	\end{description}	 
 \end{description}
 
