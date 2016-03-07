@@ -1,0 +1,1 @@
+# System configuration for time synchronization using a gps device
