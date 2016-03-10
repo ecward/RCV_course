@@ -77,5 +77,54 @@ We will enable gpsd in a startup script
 
 The chrony server
 
+We need to allow computers on the same network to use the NUC as their NTP 
+server in chrony.conf
+
+   allow 130.237.218
+
+Obvoiusly change to use the address of the current subnet.
+
+    local startum 1
+
+Which indicates that the NUC has access to a real time clock.
+
+### Server debug
+
+The password is listed in /etc/chrony/chrony.keys
+
+> chronyc
+> password vJgD1yif 
+> clients
+> settime 17:17:17
+
+Settime should set the system clock and also the clients clock, note that
+there are protections against bad estimates built in to chrony. 
+
+So you might have to remove 
+
+    maxupdateskew
+
+To actually change the time
+
+### Router configuration
+
+In order for clients to connect to the NUC to get the time, we need a static
+IP for the NUC.
+
+## Client configuration
+
+    sudo apt-get install chrony
+
+Add the the ip of the NUC as as server
+
+e.g.
+
+130.237.218.75
+
+service chrony restart
 
 
+#TODOs
+
+It wuld be nice to have a DNS server running on the nuc so that we 
+can refer to laptops using that. But not really needed.
