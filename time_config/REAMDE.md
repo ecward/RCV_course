@@ -39,6 +39,19 @@ sudo apt-get install gpsd-clients //for debuging
 
 ## Server set-up
 
+If we use a serial port (using a serial-usb converter) we need to set
+permissions
+
+   sudo chmod 666 /dev/ttyUSB0
+
+Configure using
+
+   sudo minicom -s
+
+Check that we are getting data
+
+   moserial
+
 Plug in the BU-353 to USB port 0 (the "SS" one). To check that it's working run (as root):
 
     stty -F /dev/ttyUSB0 ispeed 4800 && cat < /dev/ttyUSB0
