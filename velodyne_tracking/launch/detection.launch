@@ -1,0 +1,15 @@
+<launch>
+    <node pkg="velodyne_tracking" type="create_elevation_map" name="create_elevation_map" output="screen" respawn="false">
+        <param name="grid_size" value="0.2"/>
+        <param name="max_radius" value="20.0"/>
+        <param name="double_radius" value="7.0"/>
+    </node>
+    <node pkg="velodyne_tracking" type="create_filled_elevation_map" name="create_filled_elevation_map" output="screen" respawn="false">
+        <param name="max_height" value="1.0"/>
+        <param name="min_height" value="-1.5"/>
+    </node>
+    <node pkg="velodyne_tracking" type="create_elevation_blobs" name="create_elevation_blobs" output="screen" respawn="false">
+        <param name="grid_size" value="0.2"/>
+        <param name="max_radius" value="20.0"/>
+    </node>
+</launch>
