@@ -100,7 +100,7 @@ void PeopleTracker::parseParams(ros::NodeHandle n) {
 
 
 void PeopleTracker::trackingThread() {
-    ros::Rate fps(30);
+    ros::Rate fps(20);
     double time_sec = 0.0;
     while(ros::ok()) {
         std::map<long, std::vector<geometry_msgs::Pose> > ppl = ekf == NULL ? ukf->track(&time_sec) : ekf->track(&time_sec);

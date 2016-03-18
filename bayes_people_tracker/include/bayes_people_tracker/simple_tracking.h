@@ -79,7 +79,7 @@ template<typename FilterType>
 class SimpleTracking
 {
 public:
-    SimpleTracking() {
+    SimpleTracking() : mtrk(12, 0.2) {
         time = getTime();
         observation = new FM::Vec(2);
     }

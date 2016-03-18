@@ -34,7 +34,7 @@
 #include "bayes_people_tracker/asso_exception.h"
 #include "bayes_people_tracker/people_marker.h"
 
-#define BASE_LINK "/base_link"
+#define BASE_LINK "/map"
 
 class PeopleTracker
 {
