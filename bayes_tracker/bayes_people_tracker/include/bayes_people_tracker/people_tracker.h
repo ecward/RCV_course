@@ -33,6 +33,7 @@
 #include "bayes_people_tracker/simple_tracking.h"
 #include "bayes_people_tracker/asso_exception.h"
 #include "bayes_people_tracker/people_marker.h"
+#include "bayes_people_tracker/car_marker.h"
 
 #define BASE_LINK "/map"
 
@@ -90,6 +91,7 @@ private:
     boost::uuids::uuid dns_namespace_uuid;
 
     PeopleMarker pm;
+    CarMarker cm;
 
     SimpleTracking<EKFilter> *ekf = NULL;
     SimpleTracking<UKFilter> *ukf = NULL;

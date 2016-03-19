@@ -232,8 +232,10 @@ void PeopleTracker::createVisualisation(std::vector<geometry_msgs::Pose> poses, 
     ROS_DEBUG("Creating markers");
     visualization_msgs::MarkerArray marker_array;
     for(int i = 0; i < poses.size(); i++) {
-        std::vector<visualization_msgs::Marker> human = pm.createHuman(i*10, poses[i], target_frame);
-        marker_array.markers.insert(marker_array.markers.begin(), human.begin(), human.end());
+        //std::vector<visualization_msgs::Marker> human = pm.createHuman(i*10, poses[i], target_frame);
+        //marker_array.markers.insert(marker_array.markers.begin(), human.begin(), human.end());
+        std::vector<visualization_msgs::Marker> car = cm.createCar(i*10, poses[i], target_frame);
+        marker_array.markers.insert(marker_array.markers.begin(), car.begin(), car.end());
     }
     pub.publish(marker_array);
 }
