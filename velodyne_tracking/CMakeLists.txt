@@ -6,7 +6,7 @@ add_definitions(-std=c++11 -O3)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS roscpp pcl_ros std_msgs sensor_msgs cv_bridge)
+find_package(catkin REQUIRED COMPONENTS roscpp pcl_ros std_msgs sensor_msgs cv_bridge tf tf_conversions)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -116,12 +116,16 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-# include_directories(include)
+#include_directories(src)
 
 ## Declare a C++ library
-# add_library(velodyne_tracking
-#   src/${PROJECT_NAME}/velodyne_tracking.cpp
-# )
+#add_library(oxts
+#  src/oxts/oxts.cpp src/oxts/oxts.h
+#)
+
+#target_link_libraries(oxts
+#  ${PCL_LIBRARIES}
+#)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -134,6 +138,7 @@ add_executable(create_filled_elevation_map src/create_filled_elevation_map.cpp)
 add_executable(create_edge_map src/create_edge_map.cpp)
 add_executable(create_elevation_blobs src/create_elevation_blobs.cpp)
 add_executable(publish_velodyne_clouds src/publish_velodyne_clouds.cpp)
+add_executable(publish_velodyne_transforms src/publish_velodyne_transforms.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
@@ -165,6 +170,12 @@ target_link_libraries(create_elevation_blobs
 )
 
 target_link_libraries(publish_velodyne_clouds
+  ${catkin_LIBRARIES}
+  ${PCL_LIBRARIES}
+  ${OpenCV_LIBS}
+)
+
+target_link_libraries(publish_velodyne_transforms
   ${catkin_LIBRARIES}
   ${PCL_LIBRARIES}
   ${OpenCV_LIBS}
