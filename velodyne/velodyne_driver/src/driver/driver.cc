@@ -28,7 +28,8 @@ VelodyneDriver::VelodyneDriver(ros::NodeHandle node,
                                ros::NodeHandle private_nh)
 {
     private_nh.param("stream_id",stream_id_,std::string(""));
-    ROS_INFO_STREAM("Starting velodyne driver id = " << stream_id_);
+    bool offline_mode = private_nh.param("pcap", std::string("")) != "";
+    ROS_INFO_STREAM("Starting velodyne driver id = " << stream_id_ << " running in " << (offline_mode ? "offline mode":"online mode"));
 
   // use private node handle to get parameters
   //private_nh.param("frame_id", config_.frame_id, std::string("velodyne"));

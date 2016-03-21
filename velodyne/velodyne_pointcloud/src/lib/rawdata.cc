@@ -112,15 +112,16 @@ namespace velodyne_rawdata
    *  @param pc shared pointer to point cloud (points are appended)
    */
   void RawData::unpack(const velodyne_msgs::VelodynePacket &pkt,
-                       VPointCloud &pc)
+                       VPointCloud &pc,
+                       long & microseconds_since_last_hour)
   {
     ROS_DEBUG_STREAM("Received packet, time: " << pkt.stamp);
     
     /** special parsing for the VLP16 **/
     if (calibration_.num_lasers == 16)
     {
-      unpack_vlp16(pkt, pc);
-      return;
+        unpack_vlp16(pkt, pc,microseconds_since_last_hour);
+        return;
     }
     
     const raw_packet_t *raw = (const raw_packet_t *) &pkt.data[0];
@@ -281,7 +282,8 @@ namespace velodyne_rawdata
    *  @param pc shared pointer to point cloud (points are appended)
    */
   void RawData::unpack_vlp16(const velodyne_msgs::VelodynePacket &pkt,
-                             VPointCloud &pc)
+                             VPointCloud &pc,
+                             long & microseconds_since_last_hour)
   {
     float azimuth;
     float azimuth_diff;
@@ -291,7 +293,26 @@ namespace velodyne_rawdata
     float x, y, z;
     float intensity;
 
-    const raw_packet_t *raw = (const raw_packet_t *) &pkt.data[0];
+    //const raw_packet_t *raw = (const raw_packet_t *) &pkt.data[0];
+    const raw_packet_vlp16_t * raw = (const raw_packet_vlp16_t *) &pkt.data[0];
+
+    //Get seconds since last hour
+    //1. Get bytes 1201-1204
+    //2. (if Big-endian) Reverse the bytes (LSB first)
+    //3. interpret as int
+#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+    uint8_t rev[TIMESTAMP_SIZE];
+    for(int i=0; i<TIMESTAMP_SIZE; ++i) {
+        rev[i] = raw->timestamp[TIMESTAMP_SIZE-1-i];
+    }
+    uint32_t * ts = (uint32_t*) &rev[0];
+    microseconds_since_last_hour = (long)*ts;
+    //seconds_since_last_hour = (double)*ts / 1.0e6;
+#else
+    uint32_t * ts = (uint32_t*) &(raw->timestamp[0]);
+    microseconds_since_last_hour = (long)*ts;
+    //seconds_since_last_hour = (double)*ts / 1.0e6;
+#endif
 
     for (int block = 0; block < BLOCKS_PER_PACKET; block++) {
 

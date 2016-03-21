@@ -33,6 +33,7 @@
   <include file="$(find velodyne_pointcloud)/launch/cloud_nodelet.launch">
     <arg name="stream_id" value="$(arg stream_id)" />
     <arg name="calibration" value="$(arg calibration)"/>
+    <arg name="pcap" value="$(arg pcap)" />
     <arg name="min_range" value="$(arg min_range)"/>
     <arg name="max_range" value="$(arg max_range)"/>
   </include>

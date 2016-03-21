@@ -98,6 +98,9 @@ namespace velodyne_rawdata
   static const int PACKET_STATUS_SIZE = 4;
   static const int SCANS_PER_PACKET = (SCANS_PER_BLOCK * BLOCKS_PER_PACKET);
 
+  static const int TIMESTAMP_SIZE = 4;
+  static const int FACTORY_SIZE = 2;
+
   /** \brief Raw Velodyne packet.
    *
    *  revolution is described in the device manual as incrementing
@@ -116,6 +119,14 @@ namespace velodyne_rawdata
     uint16_t revolution;
     uint8_t status[PACKET_STATUS_SIZE]; 
   } raw_packet_t;
+
+  typedef struct raw_packet_vlp16
+  {
+      raw_block_t blocks[BLOCKS_PER_PACKET];
+      uint8_t timestamp[TIMESTAMP_SIZE];
+      uint8_t factory[FACTORY_SIZE];
+
+  } raw_packet_vlp16_t;
 
   /** \brief Velodyne data conversion class */
   class RawData
@@ -138,7 +149,7 @@ namespace velodyne_rawdata
      */
     int setup(ros::NodeHandle private_nh);
 
-    void unpack(const velodyne_msgs::VelodynePacket &pkt, VPointCloud &pc);
+    void unpack(const velodyne_msgs::VelodynePacket &pkt, VPointCloud &pc, long &microseconds_since_last_hour);
     
     void setParameters(double min_range, double max_range, double view_direction,
                        double view_width);
@@ -166,7 +177,7 @@ namespace velodyne_rawdata
     float cos_rot_table_[ROTATION_MAX_UNITS];
     
     /** add private function to handle the VLP16 **/ 
-    void unpack_vlp16(const velodyne_msgs::VelodynePacket &pkt, VPointCloud &pc);
+    void unpack_vlp16(const velodyne_msgs::VelodynePacket &pkt, VPointCloud &pc, long &microseconds_since_last_hour);
 
     /** in-line test whether a point is in range */
     bool pointInRange(float range)

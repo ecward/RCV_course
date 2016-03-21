@@ -37,6 +37,7 @@ namespace velodyne_pointcloud
   private:
 
     std::string stream_id_;
+    bool offline_mode_;
     
     void callback(velodyne_pointcloud::VelodyneConfigConfig &config,
                 uint32_t level);

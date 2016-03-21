@@ -64,6 +64,7 @@ namespace velodyne_pointcloud
     outMsg->header.frame_id = config_.frame_id;
     outMsg->height = 1;
 
+    ROS_DEBUG("Transform::processScan()");
     // process each packet provided by the driver
     for (size_t next = 0; next < scanMsg->packets.size(); ++next)
       {
@@ -77,7 +78,8 @@ namespace velodyne_pointcloud
         pcl_conversions::toPCL(header, inPc_.header);
 
         // unpack the raw data
-        data_->unpack(scanMsg->packets[next], inPc_);
+        long microseconds_since_last_hour;
+        data_->unpack(scanMsg->packets[next], inPc_,microseconds_since_last_hour);
 
         // clear transform point cloud for this packet
         tfPc_.points.clear();           // is this needed?
