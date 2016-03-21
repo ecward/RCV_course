@@ -27,11 +27,18 @@ namespace velodyne_driver
 VelodyneDriver::VelodyneDriver(ros::NodeHandle node,
                                ros::NodeHandle private_nh)
 {
+    private_nh.param("stream_id",stream_id_,std::string(""));
+    ROS_INFO_STREAM("Starting velodyne driver id = " << stream_id_);
+
   // use private node handle to get parameters
-  private_nh.param("frame_id", config_.frame_id, std::string("velodyne"));
+  //private_nh.param("frame_id", config_.frame_id, std::string("velodyne"));
+  config_.frame_id = "velodyne_"+stream_id_;
   std::string tf_prefix = tf::getPrefixParam(private_nh);
   ROS_DEBUG_STREAM("tf_prefix: " << tf_prefix);
   config_.frame_id = tf::resolve(tf_prefix, config_.frame_id);
+
+
+
 
   // get model name, validate string, determine packet rate
   private_nh.param("model", config_.model, std::string("64E"));
@@ -89,7 +96,7 @@ VelodyneDriver::VelodyneDriver(ros::NodeHandle node,
   ROS_INFO("expected frequency: %.3f (Hz)", diag_freq);
 
   using namespace diagnostic_updater;
-  diag_topic_.reset(new TopicDiagnostic("velodyne_packets", diagnostics_,
+  diag_topic_.reset(new TopicDiagnostic("velodyne_packets_"+stream_id_, diagnostics_,
                                         FrequencyStatusParam(&diag_min_freq_,
                                                              &diag_max_freq_,
                                                              0.1, 10),
@@ -97,24 +104,42 @@ VelodyneDriver::VelodyneDriver(ros::NodeHandle node,
 
   // open Velodyne input device or file
   if (dump_file != "")
-    {
+  {
       input_.reset(new velodyne_driver::InputPCAP(private_nh,
                                                   packet_rate,
                                                   dump_file));
-    }
+  }
   else
-    {
+  {
       input_.reset(new velodyne_driver::InputSocket(private_nh, udp_port));
-    }
+  }
 
+  ///TODO, clean this up to be more transparent with regards to PCAP or not..
+  //Only care about this if we are using pcap
+  if( dump_file != "") {
+      std::string dest_port;
+      private_nh.param("port",dest_port,std::string(""));
+      if(!dest_port.empty())
+          ROS_INFO_STREAM("Set port filter to default " << dest_port);
+      else {
+          ROS_INFO_STREAM("Set port filter to " << udp_port);
+          std::stringstream ss;
+          ss << udp_port;
+          dest_port = ss.str();
+      }
+      input_->setDesinationPort(dest_port);
+  }
   std::string devip;
-  private_nh.param("device_ip", devip, std::string(""));
+  private_nh.param("device_ip", devip, std::string(""));                    
   if(!devip.empty())
-    ROS_INFO_STREAM("Set device ip to " << devip << ", only accepting packets from this address." );
+      ROS_INFO_STREAM("Set device ip to " << devip << ", only accepting packets from this address." );
+  else
+      ROS_WARN_STREAM("Device ip not set!");
   input_->setDeviceIP(devip);
 
+
   // raw data output topic
-  output_ = node.advertise<velodyne_msgs::VelodyneScan>("velodyne_packets", 10);
+  output_ = node.advertise<velodyne_msgs::VelodyneScan>("velodyne_packets_"+stream_id_, 10);
 }
 
 /** poll the device

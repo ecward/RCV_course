@@ -242,7 +242,11 @@ namespace velodyne_driver
 
   void InputPCAP::setDeviceIP(const std::string &ip)
   {
-      std::string filter_str = "src host " + devip_str_ + " && udp src port 2368 && udp dst port 2368";
+      devip_str_ = ip;
+      std::string filter_str = "src host " + devip_str_ + " && udp src port 2368 && udp dst port " + dst_port_;
+      ROS_INFO_STREAM("Setting device IP and filter for ports: " << filter_str);
+
+      //We only compile the filter of we have a devip_str..., so we need to set that somehow
       if( devip_str_ != "" )
         pcap_compile(pcap_, &velodyne_pointdata_filter_, filter_str.c_str(), 1, PCAP_NETMASK_UNKNOWN);
   }
@@ -250,56 +254,58 @@ namespace velodyne_driver
   /** @brief Get one velodyne packet. */
   int InputPCAP::getPacket(velodyne_msgs::VelodynePacket *pkt)
   {
-    struct pcap_pkthdr *header;
-    const u_char *pkt_data;
+      struct pcap_pkthdr *header;
+      const u_char *pkt_data;
 
-    while (true)
+      while (true)
       {
-        int res;
-        if ((res = pcap_next_ex(pcap_, &header, &pkt_data)) >= 0)
+          int res;
+          if ((res = pcap_next_ex(pcap_, &header, &pkt_data)) >= 0)
           {
-            // if packet is not from the lidar scanner we selected by IP, continue
-            if( !devip_str_.empty() && (pcap_offline_filter( &velodyne_pointdata_filter_, header, pkt_data ) == 0) )
-              continue;
 
-            // Keep the reader from blowing through the file.
-            if (read_fast_ == false)
-              packet_rate_.sleep();
-            
-            memcpy(&pkt->data[0], pkt_data+42, packet_size);
-            pkt->stamp = ros::Time::now();
-            empty_ = false;
-            return 0;                   // success
+              // if packet is not from the lidar scanner we selected by IP, continue
+              //offline_filter == 0 <-> doesn't match
+              if( !devip_str_.empty() && (pcap_offline_filter( &velodyne_pointdata_filter_, header, pkt_data ) == 0) )
+                  continue;
+
+              // Keep the reader from blowing through the file.
+              if (read_fast_ == false)
+                  packet_rate_.sleep();
+
+              memcpy(&pkt->data[0], pkt_data+42, packet_size);
+              pkt->stamp = ros::Time::now();
+              empty_ = false;
+              return 0;                   // success
           }
 
-        if (empty_)                 // no data in file?
+          if (empty_)                 // no data in file?
           {
-            ROS_WARN("Error %d reading Velodyne packet: %s", 
-                     res, pcap_geterr(pcap_));
-            return -1;
+              ROS_WARN("Error %d reading Velodyne packet: %s",
+                       res, pcap_geterr(pcap_));
+              return -1;
           }
 
-        if (read_once_)
+          if (read_once_)
           {
-            ROS_INFO("end of file reached -- done reading.");
-            return -1;
-          }
-        
-        if (repeat_delay_ > 0.0)
-          {
-            ROS_INFO("end of file reached -- delaying %.3f seconds.",
-                     repeat_delay_);
-            usleep(rint(repeat_delay_ * 1000000.0));
+              ROS_INFO("end of file reached -- done reading.");
+              return -1;
           }
 
-        ROS_DEBUG("replaying Velodyne dump file");
+          if (repeat_delay_ > 0.0)
+          {
+              ROS_INFO("end of file reached -- delaying %.3f seconds.",
+                       repeat_delay_);
+              usleep(rint(repeat_delay_ * 1000000.0));
+          }
 
-        // I can't figure out how to rewind the file, because it
-        // starts with some kind of header.  So, close the file
-        // and reopen it with pcap.
-        pcap_close(pcap_);
-        pcap_ = pcap_open_offline(filename_.c_str(), errbuf_);
-        empty_ = true;              // maybe the file disappeared?
+          ROS_DEBUG("replaying Velodyne dump file");
+
+          // I can't figure out how to rewind the file, because it
+          // starts with some kind of header.  So, close the file
+          // and reopen it with pcap.
+          pcap_close(pcap_);
+          pcap_ = pcap_open_offline(filename_.c_str(), errbuf_);
+          empty_ = true;              // maybe the file disappeared?
       } // loop back and try again
   }
 

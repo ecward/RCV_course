@@ -25,10 +25,12 @@ namespace velodyne_pointcloud
   {
     data_->setup(private_nh);
 
+    private_nh.param("stream_id",stream_id_,std::string(""));
+    ROS_INFO_STREAM("Starting velodyne converter id = " << stream_id_);
 
     // advertise output point cloud (before subscribing to input data)
     output_ =
-      node.advertise<sensor_msgs::PointCloud2>("velodyne_points", 10);
+      node.advertise<sensor_msgs::PointCloud2>("velodyne_points_"+stream_id_, 10);
       
     srv_ = boost::make_shared <dynamic_reconfigure::Server<velodyne_pointcloud::
       VelodyneConfigConfig> > (private_nh);
@@ -37,9 +39,11 @@ namespace velodyne_pointcloud
     f = boost::bind (&Convert::callback, this, _1, _2);
     srv_->setCallback (f);
 
-    // subscribe to VelodyneScan packets
+    ROS_INFO_STREAM("Subscribing to " << "velodyne_packets_"+stream_id_);
+
+    // subscribe to VelodyneScan packets    
     velodyne_scan_ =
-      node.subscribe("velodyne_packets", 10,
+      node.subscribe("velodyne_packets_"+stream_id_, 10,
                      &Convert::processScan, (Convert *) this,
                      ros::TransportHints().tcpNoDelay(true));
   }

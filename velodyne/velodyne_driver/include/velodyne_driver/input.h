@@ -64,9 +64,21 @@ namespace velodyne_driver
      *
      * @param ip IP of a Velodyne LIDAR e.g. 192.168.51.70
      */
-    virtual void setDeviceIP( const std::string& ip ) { devip_str_ = ip; }
+    virtual void setDeviceIP( const std::string& ip ) {
+        devip_str_ = ip;
+    }
+
+    /**
+     * @brief setDesinationPort Store port number of incomming udp data
+     * @param dest_port as seen from Velodyne
+     */
+    virtual void setDesinationPort( const std::string& dest_port) {
+        dst_port_ = dest_port;
+    }
+
   protected:
-    std::string devip_str_;
+    std::string devip_str_;    
+    std::string dst_port_;
   };
 
   /** @brief Live Velodyne input from socket. */

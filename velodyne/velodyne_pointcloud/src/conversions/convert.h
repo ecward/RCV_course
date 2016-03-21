@@ -35,6 +35,8 @@ namespace velodyne_pointcloud
     ~Convert() {}
 
   private:
+
+    std::string stream_id_;
     
     void callback(velodyne_pointcloud::VelodyneConfigConfig &config,
                 uint32_t level);

@@ -37,6 +37,8 @@ public:
 
 private:
 
+  std::string stream_id_;
+
   // configuration parameters
   struct
   {

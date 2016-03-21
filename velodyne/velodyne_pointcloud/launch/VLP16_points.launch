@@ -8,19 +8,30 @@
 <launch>
 
   <!-- declare arguments with default values -->
+
+  <!-- If we have more than one velodyne we need to separate the data e.g. 
+       use stream_id="left" for one and stream_id="right" for one-->
+
+  <arg name="stream_id" default="0" />
   <arg name="pcap" default="" />
+  <arg name="device_ip" default="192.168.1.10" />
+  <arg name="port" default="2368" />
   <arg name="calibration" default="$(find velodyne_pointcloud)/params/VLP16db.yaml"/>
   <arg name="min_range" default="0.4" />
   <arg name="max_range" default="130.0" />
 
   <!-- start nodelet manager and driver nodelets -->
   <include file="$(find velodyne_driver)/launch/nodelet_manager.launch">
+    <arg name="stream_id" value="$(arg stream_id)" />
     <arg name="model" value="VLP16"/>
     <arg name="pcap" value="$(arg pcap)"/>
+    <arg name="device_ip" value="$(arg device_ip)"/>
+    <arg name="port" value="$(arg port)" />
   </include>
 
   <!-- start cloud nodelet -->
   <include file="$(find velodyne_pointcloud)/launch/cloud_nodelet.launch">
+    <arg name="stream_id" value="$(arg stream_id)" />
     <arg name="calibration" value="$(arg calibration)"/>
     <arg name="min_range" value="$(arg min_range)"/>
     <arg name="max_range" value="$(arg max_range)"/>
