@@ -88,6 +88,7 @@ namespace velodyne_pointcloud
       struct tm * timeinfo;
       timeinfo = localtime(&ts);
       double current_seconds_since_last_hour = timeinfo->tm_min*60.0 + timeinfo->tm_sec;
+      ROS_INFO_STREAM("CONVERTER: current_seconds_since_last_hour = " << current_seconds_since_last_hour);
 
       //we have one struct with current hour and one with previous hour
       struct tm timeinfo_curr_hour = *timeinfo;
@@ -110,7 +111,8 @@ namespace velodyne_pointcloud
           long microseconds_since_last_hour;
           data_->unpack(scanMsg->packets[i], *outMsg, microseconds_since_last_hour);
           double seconds_since_last_hour = (double) microseconds_since_last_hour / 1.0e6;
-
+          if(i==0)
+              ROS_INFO_STREAM("CONVERTER: seconds_since_last_hour = " << seconds_since_last_hour);
           //if seconds_since_last_hour is too large, we are getting data from the previous
           //hour, so decrement the hour by one to set the timestamp
           if( floor(seconds_since_last_hour) > current_seconds_since_last_hour &&
@@ -127,8 +129,10 @@ namespace velodyne_pointcloud
       ROS_DEBUG_STREAM("Publishing " << outMsg->height * outMsg->width
                        << " Velodyne points, time: " << outMsg->header.stamp);
 
+      double curr_time = (double)outMsg->header.stamp/1.0e6;
       ROS_INFO_STREAM("Publishing " << outMsg->height * outMsg->width
-                       << " Velodyne points, time: " << outMsg->header.stamp);
+                      << " Velodyne points, time: " << ((int) floor(curr_time)) << "."
+                      << curr_time-floor(curr_time));
       output_.publish(outMsg);
   }
 

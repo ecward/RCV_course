@@ -18,8 +18,8 @@
 #include <ros/ros.h>
 #include <tf/transform_listener.h>
 #include <velodyne_msgs/VelodyneScan.h>
-
 #include "driver.h"
+#include <time.h>
 
 namespace velodyne_driver
 {
@@ -167,14 +167,64 @@ bool VelodyneDriver::poll(void)
     }
 
   // publish message using time of last packet read
-  ROS_DEBUG("Publishing a full Velodyne scan.");
+  //ROS_DEBUG("Publishing a full Velodyne scan.");
+  ROS_INFO_STREAM("Publish velodyne scan at ros::Time = "<<ros::Time::now());
+
+  ///TODO... need to break out raw-data into it's own lib
+  /// We shouldn't neeed this... The pcap poller should
+  /// just publish stuff according to a specific rate...
+  //We need to have the correct time here also, shieeet??
+
+  //&scan->packets[config_.npackets-1];
+  const raw_packet_vlp16_t * raw = (const raw_packet_vlp16_t *) &(scan->packets[0].data[0]);
+  uint32_t * ts_data = (uint32_t*) &(raw->timestamp[0]);
+  long microseconds_since_last_hour = (long)*ts_data;
+
+  //this is assumed to be unix-time in the same time-zone as the velodynes used
+  time_t ts = ros::Time::now().sec;
+  struct tm * timeinfo;
+  timeinfo = localtime(&ts);
+  double current_seconds_since_last_hour = timeinfo->tm_min*60.0 + timeinfo->tm_sec;
+  ROS_INFO_STREAM("DRIVER: current_seconds_since_last_hour = " << current_seconds_since_last_hour);
+
+  //we have one struct with current hour and one with previous hour
+  struct tm timeinfo_curr_hour = *timeinfo;
+  timeinfo_curr_hour.tm_min = 0;
+  timeinfo_curr_hour.tm_sec = 0;
+  time_t ts_prev_h = ts-60*60;
+  struct tm * timeinfo_prev_hour;
+  timeinfo_prev_hour = localtime(&ts_prev_h);
+  timeinfo_prev_hour->tm_min = 0;
+  timeinfo_prev_hour->tm_sec = 0;
+
+  time_t curr_h = mktime(&timeinfo_curr_hour);
+  long curr_h_us = 1000000*curr_h;
+  time_t prev_h = mktime(timeinfo_prev_hour);
+  long prev_h_us = 1000000*prev_h;
+  double seconds_since_last_hour = (double) microseconds_since_last_hour / 1.0e6;
+  ROS_INFO_STREAM("DRIVER: seconds_since_last_hour = " << seconds_since_last_hour);
+  long msg_stamp=0;
+  if( floor(seconds_since_last_hour) > current_seconds_since_last_hour &&
+          current_seconds_since_last_hour < 1.0) {
+
+      //use previous hours timestamp (to set the unixtime in microseconds timestamp)
+      msg_stamp = prev_h_us + microseconds_since_last_hour;
+  } else {
+      msg_stamp = curr_h_us + microseconds_since_last_hour;
+  }
+
+
+  scan->header.stamp = ros::Time( (double)msg_stamp/1.0e6 );
+  ROS_INFO_STREAM("Next scan timestamp = "<< scan->header.stamp.sec << "." << scan->header.stamp.nsec);
+  ///END TODO
+
   scan->header.stamp = ros::Time(scan->packets[config_.npackets - 1].stamp);
   scan->header.frame_id = config_.frame_id;
   output_.publish(scan);
 
   // notify diagnostics that a message has been published, updating
   // its status
-  diag_topic_->tick(scan->header.stamp);
+  diag_topic_->tick(scan->header.stamp);  
   diagnostics_.update();
 
   return true;

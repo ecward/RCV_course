@@ -6,6 +6,7 @@ set(${PROJECT_NAME}_CATKIN_DEPS
     nodelet
     roscpp
     tf
+    #velodyne_pointcloud #TODO, we need to look at the raw data in both
     velodyne_msgs)
 
 find_package(catkin REQUIRED COMPONENTS ${${PROJECT_NAME}_CATKIN_DEPS})

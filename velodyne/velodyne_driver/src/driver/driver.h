@@ -21,6 +21,7 @@
 #include <diagnostic_updater/publisher.h>
 
 #include <velodyne_driver/input.h>
+#include <inttypes.h>
 
 namespace velodyne_driver
 {
@@ -59,5 +60,32 @@ private:
 };
 
 } // namespace velodyne_driver
+
+///TODO REMOVE
+static const int SIZE_BLOCK = 100;
+static const int RAW_SCAN_SIZE = 3;
+static const int SCANS_PER_BLOCK = 32;
+static const int BLOCK_DATA_SIZE = (SCANS_PER_BLOCK * RAW_SCAN_SIZE);
+typedef struct raw_block
+{
+  uint16_t header;        ///< UPPER_BANK or LOWER_BANK
+  uint16_t rotation;      ///< 0-35999, divide by 100 to get degrees
+  uint8_t  data[BLOCK_DATA_SIZE];
+} raw_block_t;
+/**
+ * Raw Velodyne packet constants and structures.
+ */
+static const int BLOCKS_PER_PACKET = 12;
+static const int PACKET_STATUS_SIZE = 4;
+static const int TIMESTAMP_SIZE = 4;
+static const int FACTORY_SIZE = 2;
+
+typedef struct raw_packet_vlp16
+{
+    raw_block_t blocks[BLOCKS_PER_PACKET];
+    uint8_t timestamp[TIMESTAMP_SIZE];
+    uint8_t factory[FACTORY_SIZE];
+
+} raw_packet_vlp16_t;
 
 #endif // _VELODYNE_DRIVER_H_
