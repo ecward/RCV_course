@@ -29,6 +29,7 @@
 #include <fcntl.h>
 #include <sys/file.h>
 #include <velodyne_driver/input.h>
+#include <boost/date_time/posix_time/posix_time.hpp> ///TODO just for debug
 
 namespace velodyne_driver
 {
@@ -204,6 +205,7 @@ namespace velodyne_driver
                        bool read_fast,
                        double repeat_delay):
     Input(),
+    packet_rate_param_(packet_rate),
     packet_rate_(packet_rate)
   {
     filename_ = filename;
@@ -213,16 +215,17 @@ namespace velodyne_driver
 
     // get parameters using private node handle
     private_nh.param("read_once", read_once_, read_once);
-    private_nh.param("read_fast", read_fast_, read_fast);
+    //private_nh.param("read_fast", read_fast_, read_fast);
+    read_fast_ = read_fast;
     private_nh.param("repeat_delay", repeat_delay_, repeat_delay);
 
     if (read_once_)
-      ROS_INFO("Read input file only once.");
+        ROS_INFO("INPUT PCAP: Read input file only once.");
     if (read_fast_)
-      ROS_INFO("Read input file as quickly as possible.");
+        ROS_INFO("INPUT PCAP: Read input file as quickly as possible.");
     if (repeat_delay_ > 0.0)
-      ROS_INFO("Delay %.3f seconds before repeating input file.",
-               repeat_delay_);
+        ROS_INFO("Delay %.3f seconds before repeating input file.",
+                 repeat_delay_);
 
     // Open the PCAP dump file
     ROS_INFO("Opening PCAP file \"%s\"", filename_.c_str());
@@ -259,6 +262,8 @@ namespace velodyne_driver
 
       while (true)
       {
+          //It seems like we sleep for too long when running on
+          //simulated time
           int res;
           if ((res = pcap_next_ex(pcap_, &header, &pkt_data)) >= 0)
           {
@@ -269,12 +274,17 @@ namespace velodyne_driver
                   continue;
 
               // Keep the reader from blowing through the file.
-              if (read_fast_ == false)
+              if (read_fast_ == false) {
+                  //This function call tries to keep the rate between calls to
+                  //the actual rate. When we are running in simulation we
+                  //get into problems here, it seems
                   packet_rate_.sleep();
+              }
 
               memcpy(&pkt->data[0], pkt_data+42, packet_size);
               pkt->stamp = ros::Time::now();
               empty_ = false;
+
               return 0;                   // success
           }
 
@@ -306,6 +316,9 @@ namespace velodyne_driver
           pcap_close(pcap_);
           pcap_ = pcap_open_offline(filename_.c_str(), errbuf_);
           empty_ = true;              // maybe the file disappeared?
+
+
+
       } // loop back and try again
   }
 

@@ -127,6 +127,7 @@ namespace velodyne_driver
     bool read_once_;
     bool read_fast_;
     double repeat_delay_;
+    double packet_rate_param_;
     ros::Rate packet_rate_;
     bpf_program velodyne_pointdata_filter_;
   };

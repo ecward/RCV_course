@@ -22,6 +22,8 @@
 
 #include <velodyne_driver/input.h>
 #include <inttypes.h>
+#include <velodyne_msgs/ExternalTimeSource.h>
+#include <velodyne_msgs/VelodyneScan.h>
 
 namespace velodyne_driver
 {
@@ -38,6 +40,14 @@ public:
 
 private:
 
+  bool getPackets(velodyne_msgs::VelodyneScanPtr scan);
+  void printTimeInfo(const std::string &description, long timestamp);
+  void updateSimtime(const velodyne_msgs::ExternalTimeSource::ConstPtr &timeSourceMsg);
+
+  double sim_time_;
+  double sys_time_for_sim_time_;
+  ros::Subscriber time_source_;
+
   std::string stream_id_;
 
   // configuration parameters
@@ -49,6 +59,7 @@ private:
     double rpm;                      ///< device rotation rate (RPMs)
   } config_;
 
+  bool offline_mode_;
   boost::shared_ptr<Input> input_;
   ros::Publisher output_;
 

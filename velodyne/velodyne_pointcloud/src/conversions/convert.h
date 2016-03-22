@@ -25,6 +25,7 @@
 #include <dynamic_reconfigure/server.h>
 #include <velodyne_pointcloud/VelodyneConfigConfig.h>
 
+
 namespace velodyne_pointcloud
 {
   class Convert
@@ -43,6 +44,8 @@ namespace velodyne_pointcloud
                 uint32_t level);
     void processScan(const velodyne_msgs::VelodyneScan::ConstPtr &scanMsg);
 
+
+
     ///Pointer to dynamic reconfigure service srv_
     boost::shared_ptr<dynamic_reconfigure::Server<velodyne_pointcloud::
       VelodyneConfigConfig> > srv_;
@@ -56,6 +59,7 @@ namespace velodyne_pointcloud
       int npackets;                    ///< number of packets to combine
     } Config;
     Config config_;
+
   };
 
 } // namespace velodyne_pointcloud

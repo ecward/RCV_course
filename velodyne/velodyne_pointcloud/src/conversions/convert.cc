@@ -49,7 +49,11 @@ namespace velodyne_pointcloud
       node.subscribe("velodyne_packets_"+stream_id_, 10,
                      &Convert::processScan, (Convert *) this,
                      ros::TransportHints().tcpNoDelay(true));
+
+
   }
+
+
   
   void Convert::callback(velodyne_pointcloud::VelodyneConfigConfig &config,
                 uint32_t level)

@@ -2,7 +2,8 @@
 
 import rospy
 import numpy as np
-from rosgraph_msgs.msg import Clock
+#from rosgraph_msgs.msg import Clock
+from velodyne_msgs.msg import ExternalTimeSource
 import tf
 import scipy.io as sio
 import datetime
@@ -66,89 +67,57 @@ class TrimblePlayer:
         self.utm_data = utm_data
         self.time_data = time_data
         
-        self.clock_pub = rospy.Publisher('/clock',Clock,queue_size=10)
+        self.clock_pub = rospy.Publisher('playback_clock',ExternalTimeSource,queue_size=10)
         self.tf_pub    = tf.TransformBroadcaster()
         
         rospy.init_node('trimble_player')
-        rospy.set_param('/use_sim_time', True)
+        #rospy.set_param('/use_sim_time', True)
 
         #We have problems with the timestamps,
         #it should be almost exactly 10 ms between the ticks, but sometimes it is not,
 
         diff_t = np.diff(self.time_data)
 
-        #A datum is OK if it is 10ms to previous or to next
-        #Algorithm is:
-        # 1. find next_OK > prev_OK
-        # 2. set prev_OK = next_OK
-        # 3. find next_OK
-        # 4. publish prev_OK
-        # 5. Sleep until next_OK
+        #Let's just make it easy for ourselves. Take times such that
+        #time is monotonically increasing
+        OK_time_idx = [0]
+        for i in range(1,np.size(self.time_data)):
+            if self.time_data[i] > self.time_data[OK_time_idx[-1]]:
+                OK_time_idx.append(i)
 
-
-        def diff_OK(diff):
-            return diff > 0 and np.abs(diff-0.01) < 1.0e-5
-        
-                
-        def find_nextOK(prev_OK):
-            i = prev_OK+1
-            while i < np.size(self.time_data)-1:
-                diff_prev = self.time_data[i]-self.time_data[i-1]
-                diff_next = self.time_data[i+1]-self.time_data[i]
-                if diff_OK(diff_prev) or diff_OK(diff_next):
-                    return i
-                i += 1
-            
-            print "No more data"
-            return -1
-
-        prev_OK = 0
         last_print_time = 0
-        
-        #loop until we have output all the gps data
-        for i in range(1,np.size(utm_data,0)):
+        for i in range(0,len(OK_time_idx)-1):
+            t_idx = OK_time_idx[i]
             if not rospy.is_shutdown():
                 t0 = time.time()
-                next_OK = find_nextOK(prev_OK)
-                if next_OK < 0:
-                    break
-
-                prev_OK = next_OK
-
-                t = self.time_data[prev_OK]
-                pose = self.utm_data[prev_OK]
-
-                c = Clock()            
-                c.clock.secs = int(t)
-                c.clock.nsecs = int((t-int(t))*1000000000)
-                self.clock_pub.publish(c)
-
                 
+                t = self.time_data[t_idx]
+                pose = self.utm_data[t_idx]
+
+                #c = Clock()            
+                #c.clock.secs = int(t)
+                #c.clock.nsecs = int((t-int(t))*1000000000)
+                c = ExternalTimeSource()
+                c.header.stamp = rospy.Time.now()
+                c.unix_time_s  = t
+                self.clock_pub.publish(c)
 
                 #publish transform between "map" and "trimble"
                 self.tf_pub.sendTransform((pose[0],pose[1],0.0), 
                                           tf.transformations.quaternion_from_euler(0,0,pose[2]),
-                                          c.clock,
+                                          c.header.stamp,
                                           "trimble",
                                           "map")
 
-
-                next_OK = find_nextOK(prev_OK)
-                if next_OK < 0:
-                    break
-
+                
                 if (t - last_print_time) > 0.995:
                     print "Clock-time = ",datetime.datetime.fromtimestamp(t).strftime("%d/%m/%Y %H:%M:%S.%f")
                     print "unix_time = ",t
                     last_print_time = t
 
-                #rospy.spin_once()
 
-                comp_time = time.time()-t0
-                #Sleep until next timestamp, accounting for computation time                
-                #print "comp_time = ",comp_time
-                #print "delta_time = ",self.time_data[next_OK]-self.time_data[prev_OK]
-                sleep_time = self.time_data[next_OK]-self.time_data[prev_OK]-comp_time
+                comp_time = time.time()-t0                
+                sleep_time = self.time_data[OK_time_idx[i+1]]-t-comp_time
                 # print "sleep_time = ",sleep_time
                 if sleep_time < 0:
                     sleep_time = 0
