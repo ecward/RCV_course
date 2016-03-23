@@ -51,6 +51,7 @@ namespace velodyne_driver
 
     // connect to Velodyne UDP port
     ROS_INFO_STREAM("Opening UDP socket: port " << udp_port);
+    ROS_INFO_STREAM("To read velodyne packets of size " << packet_size << " Bytes");
     sockfd_ = socket(PF_INET, SOCK_DGRAM, 0);
     if (sockfd_ == -1)
       {
@@ -180,6 +181,8 @@ namespace velodyne_driver
     // Average the times at which we begin and end reading.  Use that to
     // estimate when the scan occurred.
     double time2 = ros::Time::now().toSec();
+
+    ///TODO! This is wrong if we actually have a timestamp!
     pkt->stamp = ros::Time((time2 + time1) / 2.0);
 
     return 0;
@@ -229,6 +232,8 @@ namespace velodyne_driver
 
     // Open the PCAP dump file
     ROS_INFO("Opening PCAP file \"%s\"", filename_.c_str());
+    ROS_INFO_STREAM("To read velodyne packets of size (+42 Byte header)" << packet_size << " Bytes");
+
     if ((pcap_ = pcap_open_offline(filename_.c_str(), errbuf_) ) == NULL)
       {
         ROS_FATAL("Error opening Velodyne socket dump file.");
@@ -254,7 +259,8 @@ namespace velodyne_driver
         pcap_compile(pcap_, &velodyne_pointdata_filter_, filter_str.c_str(), 1, PCAP_NETMASK_UNKNOWN);
   }
 
-  /** @brief Get one velodyne packet. */
+  /** @brief Get one velodyne packet.
+  */
   int InputPCAP::getPacket(velodyne_msgs::VelodynePacket *pkt)
   {
       struct pcap_pkthdr *header;
@@ -282,6 +288,8 @@ namespace velodyne_driver
               }
 
               memcpy(&pkt->data[0], pkt_data+42, packet_size);
+
+              ///TODO this is wrong if we actually have a timestamp!
               pkt->stamp = ros::Time::now();
               empty_ = false;
 

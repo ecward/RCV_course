@@ -20,6 +20,7 @@
 
 #include "driver.h"
 #include <time.h>
+#include <iomanip>
 
 namespace velodyne_driver
 {
@@ -164,9 +165,9 @@ void VelodyneDriver::printTimeInfo(std::string const & description, long timesta
                     msg_timeinfo->tm_min<<":"<<msg_timeinfo->tm_sec);
 }
 
-double getScanTime(double sim_time, velodyne_msgs::VelodyneScanPtr scan) {
+double getScanTime(double sim_time, velodyne_msgs::VelodyneScanPtr scan, int packet_idx) {
 
-    const raw_packet_vlp16_t * raw = (const raw_packet_vlp16_t *) &(scan->packets[0].data[0]);
+    const raw_packet_vlp16_t * raw = (const raw_packet_vlp16_t *) &(scan->packets[packet_idx].data[0]);
     uint32_t * ts_data = (uint32_t*) &(raw->timestamp[0]);
     long microseconds_since_last_hour = (long)*ts_data;
 
@@ -204,7 +205,11 @@ double getScanTime(double sim_time, velodyne_msgs::VelodyneScanPtr scan) {
         msg_stamp = curr_h_us + microseconds_since_last_hour;
     }
     //printTimeInfo("DRIVER MSG TIME = ",msg_stamp/1000000);
-    return (double)msg_stamp/1.0e6;
+
+    double ret_val = (double)msg_stamp/1.0e6;
+    ROS_INFO_STREAM("DRIVER MSG PACKET " << packet_idx << " US SINCE LAST H = "<<microseconds_since_last_hour);
+    ROS_INFO_STREAM("DRIVER MSG PACKET " << packet_idx << " TIME = "<<std::setprecision(15)<<ret_val);
+    return ret_val;
 }
 
 void VelodyneDriver::updateSimtime(const velodyne_msgs::ExternalTimeSource::ConstPtr &timeSourceMsg){
@@ -255,23 +260,39 @@ bool VelodyneDriver::poll(void)
         double time_offset =  sys_time_for_sim_time_ - sim_time_;
         double current_sim_time = ros::Time::now().toSec() - time_offset;
 
+        //The goal of the driver is to concatenate config_.npackets into one "scan"
+        //The velodyne gives timestamps for each packet (not scan)
         bool packets_left = getPackets(scan);
-        double packet_time = getScanTime(sim_time_,scan);
+
+        //This is the timestamp for the first packet in the scan
+        double packet_time = getScanTime(sim_time_,scan,0);
 
         //if packet_time is before current_sim_time, keep looping
         while(packets_left && packet_time < current_sim_time) {
 
-            ROS_INFO_STREAM("Driver cathing up to current_sim_time="<<(int)current_sim_time<<"for packet with time="<<(int)packet_time<<" time diff = " << current_sim_time-packet_time);
+            ROS_INFO_STREAM("Driver cathing up to current_sim_time= "<<(int)current_sim_time<<" for packet with time= "<<(int)packet_time<<" time diff = " << current_sim_time-packet_time);
 
             packets_left = getPackets(scan);
             //packet_time = getScanTime(sim_time_,scan);
-            packet_time = getScanTime(current_sim_time,scan);
+
+            //WTF, this gives approx 0.2 seconds between scans but it should be approx 0.1 seconds
+
+            packet_time = getScanTime(current_sim_time,scan,0);
         }
+
+        //Just for debugging, let's loop throught the pacekts and check their times
+        double packet_time_last=0;
+        for(int i = 0; i < config_.npackets; ++i){
+            packet_time_last = getScanTime(current_sim_time,scan,i);
+        }
+        ROS_INFO_STREAM("packet_time_last - packet_time_first = "<<packet_time_last-packet_time);
 
         //here we skip the last packet even if synced but whatever
         if(packets_left) {
             //if packet_time is after current_sim_time, sleep until packet time
             double packet_time_sys_time = packet_time + time_offset;
+            ROS_INFO_STREAM("PUBLISH PACKET WITH TS = "<<std::setprecision(15)<<packet_time);
+            ROS_INFO_STREAM("PUBLISH PACKET WITH TS_SYS = "<<std::setprecision(15)<<packet_time_sys_time);
             ROS_INFO_STREAM("DRIVER SLEEPING FOR "<<ros::Time(packet_time_sys_time).toSec()-ros::Time::now().toSec()<<" s");
             ros::Time::sleepUntil(ros::Time(packet_time_sys_time));
 

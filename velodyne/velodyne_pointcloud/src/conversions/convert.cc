@@ -136,7 +136,7 @@ namespace velodyne_pointcloud
       double curr_time = (double)outMsg->header.stamp/1.0e6;
       ROS_INFO_STREAM("Publishing " << outMsg->height * outMsg->width
                       << " Velodyne points, time: " << ((int) floor(curr_time)) << "."
-                      << curr_time-floor(curr_time));
+                      << (int)1.0e6*(curr_time-floor(curr_time)));
       output_.publish(outMsg);
   }
 

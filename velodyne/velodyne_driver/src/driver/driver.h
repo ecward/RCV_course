@@ -77,12 +77,15 @@ static const int SIZE_BLOCK = 100;
 static const int RAW_SCAN_SIZE = 3;
 static const int SCANS_PER_BLOCK = 32;
 static const int BLOCK_DATA_SIZE = (SCANS_PER_BLOCK * RAW_SCAN_SIZE);
+
+//THIS corresponds to manual but names are not the same
 typedef struct raw_block
 {
   uint16_t header;        ///< UPPER_BANK or LOWER_BANK
   uint16_t rotation;      ///< 0-35999, divide by 100 to get degrees
   uint8_t  data[BLOCK_DATA_SIZE];
 } raw_block_t;
+
 /**
  * Raw Velodyne packet constants and structures.
  */
@@ -98,5 +101,23 @@ typedef struct raw_packet_vlp16
     uint8_t factory[FACTORY_SIZE];
 
 } raw_packet_vlp16_t;
+
+//above doesn't really make sense compared to manual, names are changed
+//but it is the same layout as you can see
+typedef struct raw_block_vlp16_manual
+{
+    uint16_t Flag;
+    uint16_t Azimuth;
+    uint8_t Channel_data[32*(2+1)];
+} raw_block_vlp16_manual_t;
+
+// w/o header
+typedef struct raw_packet_vlp16_manual
+{
+    raw_block_vlp16_manual_t blocks[12];
+    uint8_t timestamp[4];
+    uint8_t factory[2];
+} raw_packet_vlp16_manual_t;
+
 
 #endif // _VELODYNE_DRIVER_H_

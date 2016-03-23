@@ -90,6 +90,9 @@ namespace velodyne_pointcloud
         tfPc_.header.frame_id = config_.frame_id;
 
         // transform the packet point cloud into the target frame
+        //This should be done on a point basis, not a packet basis, but probably
+        //doesn't make a difference since is 663us in the case of dual
+        //return and 2x663us otherwise duration for each packet
         try
           {
             ROS_DEBUG_STREAM("transforming from " << inPc_.header.frame_id

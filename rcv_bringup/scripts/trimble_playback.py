@@ -127,7 +127,9 @@ class TrimblePlayer:
     
 
 if __name__ == '__main__':
-    trimble_data = loadmat('/media/erik/3tb/RCV_data/arlanda_test_track_wireshark_18032016/Loop1.mat')
+    #trimble_data = loadmat('/media/erik/3tb/RCV_data/arlanda_test_track_wireshark_18032016/Loop1.mat')
+    #trimble_data = loadmat('/media/erik/3tb/RCV_data/arlanda_test_track_wireshark_18032016/Loop2.mat') #this is the same data as Loop1... fuck
+    trimble_data = loadmat('/media/erik/3tb/RCV_data/arlanda_test_track_wireshark_18032016/ThirdRunBehindTruckStephanos30and50.mat')
 
     data =  trimble_data["Results"]["GPS"]["data"]
     lat = data[:,gps_fields['lat']]; lat_ts = data[:,gps_fields['lat_ts']]
