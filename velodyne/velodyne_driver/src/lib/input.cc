@@ -252,11 +252,14 @@ namespace velodyne_driver
   {
       devip_str_ = ip;
       std::string filter_str = "src host " + devip_str_ + " && udp src port 2368 && udp dst port " + dst_port_;
+      //std::string filter_str = "src host " + devip_str_ + " && udp src port 2368";
       ROS_INFO_STREAM("Setting device IP and filter for ports: " << filter_str);
 
       //We only compile the filter of we have a devip_str..., so we need to set that somehow
       if( devip_str_ != "" )
-        pcap_compile(pcap_, &velodyne_pointdata_filter_, filter_str.c_str(), 1, PCAP_NETMASK_UNKNOWN);
+          pcap_compile(pcap_, &velodyne_pointdata_filter_, filter_str.c_str(), 1, PCAP_NETMASK_UNKNOWN);
+
+      pcap_compile(pcap_, &velodyne_data_filter_, "src host 192.168.1.10", 1, PCAP_NETMASK_UNKNOWN);
   }
 
   /** @brief Get one velodyne packet.
@@ -268,11 +271,14 @@ namespace velodyne_driver
 
       while (true)
       {
-          //It seems like we sleep for too long when running on
-          //simulated time
+          //We might be missing a lot of packets somehow, this could explain that we are
+          //not getting the correct number of packet/second
           int res;
           if ((res = pcap_next_ex(pcap_, &header, &pkt_data)) >= 0)
           {
+//              if( pcap_offline_filter(&velodyne_data_filter_,header,pkt_data) != 0) {
+//                  ROS_INFO_STREAM("Got velodyne data from PCAP");
+//              }
 
               // if packet is not from the lidar scanner we selected by IP, continue
               //offline_filter == 0 <-> doesn't match

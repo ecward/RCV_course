@@ -154,6 +154,8 @@ VelodyneDriver::VelodyneDriver(ros::NodeHandle node,
         sim_time_ = 0.0;
 
     }
+    packets_last_s_ = 0;
+    last_s_ = ros::Time::now().toSec();
 }
 
 void VelodyneDriver::printTimeInfo(std::string const & description, long timestamp) {
@@ -207,8 +209,8 @@ double getScanTime(double sim_time, velodyne_msgs::VelodyneScanPtr scan, int pac
     //printTimeInfo("DRIVER MSG TIME = ",msg_stamp/1000000);
 
     double ret_val = (double)msg_stamp/1.0e6;
-    ROS_INFO_STREAM("DRIVER MSG PACKET " << packet_idx << " US SINCE LAST H = "<<microseconds_since_last_hour);
-    ROS_INFO_STREAM("DRIVER MSG PACKET " << packet_idx << " TIME = "<<std::setprecision(15)<<ret_val);
+    //ROS_INFO_STREAM("DRIVER MSG PACKET " << packet_idx << " US SINCE LAST H = "<<microseconds_since_last_hour);
+    //ROS_INFO_STREAM("DRIVER MSG PACKET " << packet_idx << " TIME = "<<std::setprecision(15)<<ret_val);
     return ret_val;
 }
 
@@ -229,6 +231,7 @@ bool VelodyneDriver::getPackets(velodyne_msgs::VelodyneScanPtr scan) {
         {
             // keep reading until full packet received
             int rc = input_->getPacket(&scan->packets[i]);
+            packets_last_s_++;
 
             if (rc == 0) break;       // got a full packet?
             if (rc < 0) return false; // end of file reached?
@@ -246,6 +249,12 @@ bool VelodyneDriver::poll(void)
     // Allocate a new shared pointer for zero-copy sharing with other nodelets.
     velodyne_msgs::VelodyneScanPtr scan(new velodyne_msgs::VelodyneScan);
     scan->packets.resize(config_.npackets);
+
+    if(ros::Time::now().toSec()-last_s_ > 1.0) {
+        last_s_ = ros::Time::now().toSec();
+        ROS_INFO_STREAM("packets last second = "<<packets_last_s_);
+        packets_last_s_ = 0;
+    }
 
     // if we are running in offline mode, we need to keep reading to catch up with
     // sim time or sleep to wait until we get there
@@ -280,19 +289,20 @@ bool VelodyneDriver::poll(void)
             packet_time = getScanTime(current_sim_time,scan,0);
         }
 
-        //Just for debugging, let's loop throught the pacekts and check their times
-        double packet_time_last=0;
+
+        //Set time for each packet
         for(int i = 0; i < config_.npackets; ++i){
-            packet_time_last = getScanTime(current_sim_time,scan,i);
+            double ptime_i = getScanTime(current_sim_time,scan,i);
+            scan->packets[i].stamp = ros::Time(ptime_i+ time_offset);
         }
-        ROS_INFO_STREAM("packet_time_last - packet_time_first = "<<packet_time_last-packet_time);
+
 
         //here we skip the last packet even if synced but whatever
         if(packets_left) {
             //if packet_time is after current_sim_time, sleep until packet time
             double packet_time_sys_time = packet_time + time_offset;
-            ROS_INFO_STREAM("PUBLISH PACKET WITH TS = "<<std::setprecision(15)<<packet_time);
-            ROS_INFO_STREAM("PUBLISH PACKET WITH TS_SYS = "<<std::setprecision(15)<<packet_time_sys_time);
+            ROS_INFO_STREAM("PUBLISH " << scan->packets.size() << " PACKETS WITH TS = "<<std::setprecision(15)<<packet_time);
+            ROS_INFO_STREAM("PUBLISH " << scan->packets.size() << " PACKETS WITH TS_SYS = "<<std::setprecision(15)<<packet_time_sys_time);
             ROS_INFO_STREAM("DRIVER SLEEPING FOR "<<ros::Time(packet_time_sys_time).toSec()-ros::Time::now().toSec()<<" s");
             ros::Time::sleepUntil(ros::Time(packet_time_sys_time));
 
@@ -313,6 +323,13 @@ bool VelodyneDriver::poll(void)
     } else {
         if(getPackets(scan)) {
             // publish message using time of last packet read (this is set using system time)
+            // We need to set the timestamp here also!
+            //Set time for each packet
+            for(int i = 0; i < config_.npackets; ++i){
+                double ptime_i = getScanTime(ros::Time::now().toSec(),scan,i);
+                scan->packets[i].stamp = ros::Time(ptime_i);
+            }
+
             scan->header.stamp = ros::Time(scan->packets[config_.npackets - 1].stamp);
             scan->header.frame_id = config_.frame_id;
             output_.publish(scan);

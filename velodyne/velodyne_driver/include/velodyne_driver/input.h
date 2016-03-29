@@ -130,6 +130,7 @@ namespace velodyne_driver
     double packet_rate_param_;
     ros::Rate packet_rate_;
     bpf_program velodyne_pointdata_filter_;
+    bpf_program velodyne_data_filter_;
   };
 
 } // velodyne_driver namespace

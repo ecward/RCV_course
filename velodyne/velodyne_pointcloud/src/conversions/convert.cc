@@ -86,49 +86,55 @@ namespace velodyne_pointcloud
       //hour from /clock which we get by setting
       // use_sim_time = true in the launch file
 
-      ///TODO, account for different time zones
-      //this is assumed to be unix-time in the same time-zone as the velodynes used
-      time_t ts = ros::Time::now().sec;
-      struct tm * timeinfo;
-      timeinfo = localtime(&ts);
-      double current_seconds_since_last_hour = timeinfo->tm_min*60.0 + timeinfo->tm_sec;
-      ROS_INFO_STREAM("CONVERTER: current_seconds_since_last_hour = " << current_seconds_since_last_hour);
+//      ///TODO, account for different time zones
+//      //this is assumed to be unix-time in the same time-zone as the velodynes used
+//      time_t ts = ros::Time::now().sec;
+//      struct tm * timeinfo;
+//      timeinfo = localtime(&ts);
+//      double current_seconds_since_last_hour = timeinfo->tm_min*60.0 + timeinfo->tm_sec;
+//      ROS_INFO_STREAM("CONVERTER: current_seconds_since_last_hour = " << current_seconds_since_last_hour);
 
-      //we have one struct with current hour and one with previous hour
-      struct tm timeinfo_curr_hour = *timeinfo;
-      timeinfo_curr_hour.tm_min = 0;
-      timeinfo_curr_hour.tm_sec = 0;
-      time_t ts_prev_h = ts-60*60;
-      struct tm * timeinfo_prev_hour;
-      timeinfo_prev_hour = localtime(&ts_prev_h);
-      timeinfo_prev_hour->tm_min = 0;
-      timeinfo_prev_hour->tm_sec = 0;
+//      //we have one struct with current hour and one with previous hour
+//      struct tm timeinfo_curr_hour = *timeinfo;
+//      timeinfo_curr_hour.tm_min = 0;
+//      timeinfo_curr_hour.tm_sec = 0;
+//      time_t ts_prev_h = ts-60*60;
+//      struct tm * timeinfo_prev_hour;
+//      timeinfo_prev_hour = localtime(&ts_prev_h);
+//      timeinfo_prev_hour->tm_min = 0;
+//      timeinfo_prev_hour->tm_sec = 0;
 
-      time_t curr_h = mktime(&timeinfo_curr_hour);
-      long curr_h_us = 1000000*curr_h;
-      time_t prev_h = mktime(timeinfo_prev_hour);
-      long prev_h_us = 1000000*prev_h;
+//      time_t curr_h = mktime(&timeinfo_curr_hour);
+//      long curr_h_us = 1000000*curr_h;
+//      time_t prev_h = mktime(timeinfo_prev_hour);
+//      long prev_h_us = 1000000*prev_h;
 
-      // process each packet provided by the driver
+//      // process each packet provided by the driver
+//      for (size_t i = 0; i < scanMsg->packets.size(); ++i)
+//      {
+//          long microseconds_since_last_hour;
+//          data_->unpack(scanMsg->packets[i], *outMsg, microseconds_since_last_hour);
+//          double seconds_since_last_hour = (double) microseconds_since_last_hour / 1.0e6;
+//          if(i==0)
+//              ROS_INFO_STREAM("CONVERTER: seconds_since_last_hour = " << seconds_since_last_hour);
+//          //if seconds_since_last_hour is too large, we are getting data from the previous
+//          //hour, so decrement the hour by one to set the timestamp
+//          if( floor(seconds_since_last_hour) > current_seconds_since_last_hour &&
+//                  current_seconds_since_last_hour < 1.0) {
+
+//              //use previous hours timestamp (to set the unixtime in microseconds timestamp)
+//              outMsg->header.stamp = prev_h_us + microseconds_since_last_hour;
+//          } else {
+//              outMsg->header.stamp = curr_h_us + microseconds_since_last_hour;
+//          }
+//      }
+
       for (size_t i = 0; i < scanMsg->packets.size(); ++i)
       {
           long microseconds_since_last_hour;
           data_->unpack(scanMsg->packets[i], *outMsg, microseconds_since_last_hour);
-          double seconds_since_last_hour = (double) microseconds_since_last_hour / 1.0e6;
-          if(i==0)
-              ROS_INFO_STREAM("CONVERTER: seconds_since_last_hour = " << seconds_since_last_hour);
-          //if seconds_since_last_hour is too large, we are getting data from the previous
-          //hour, so decrement the hour by one to set the timestamp
-          if( floor(seconds_since_last_hour) > current_seconds_since_last_hour &&
-                  current_seconds_since_last_hour < 1.0) {
-
-              //use previous hours timestamp (to set the unixtime in microseconds timestamp)
-              outMsg->header.stamp = prev_h_us + microseconds_since_last_hour;
-          } else {
-              outMsg->header.stamp = curr_h_us + microseconds_since_last_hour;
-          }
       }
-
+      outMsg->header.stamp = scanMsg->packets[0].stamp.toSec()*1.0e6;
       // publish the accumulated cloud message
       ROS_DEBUG_STREAM("Publishing " << outMsg->height * outMsg->width
                        << " Velodyne points, time: " << outMsg->header.stamp);
