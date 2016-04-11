@@ -84,6 +84,8 @@ to stop getting data:
 
 ## Server configuration
 
+    sudo apt-get install pps-tools
+
 We will enable gpsd in a startup script
 
     TODO!
@@ -137,7 +139,45 @@ e.g.
 service chrony restart
 
 
-#TODOs
+#TODO
 
 It wuld be nice to have a DNS server running on the nuc so that we 
 can refer to laptops using that. But not really needed.
+
+
+
+## PPS and gps data
+
+    sudo apt-get install setserial
+
+    setserial /dev/ttyUSB0 low_latency
+
+We will use gpsd for any gps that is connected to the system, this
+handles all the difficult stuff and all we need to do to get the data
+(time or GPS) is to listen to a port (using a gpsd client) e.g. using 
+a ros node that we download from the internet :).
+
+If we have two gps:es, we have two gpsd processess:
+
+Trimble on USB0, garmin on USB1.
+
+TODO: resolve PPS errors for garmin "KPPS cannot set PPS line discipline: Interrupted system call". For now we use garmin for time sync. (Ideas include using another PPS kernel module).
+
+For real usage, remove -D5 to not log soo much
+
+    gpsd /dev/ttyUSB1 -b -n -N -D5 -F /var/run/gpsd.sock 2>&1 | tee /home/erik/tmp/gpsd_log.txt
+
+    gpsd /dev/ttyUSB0 -b -n -N -D5 -S 4000 -F /var/run/gpsd2.sock 2>&1 | tee /home/erik/tmp/gpsd2_log.txt
+
+TODO, startup scripts!
+
+### Chrony configuration, set time from Garmin (using above configuration)
+
+Contents of /etc/chrony/chrony.conf
+
+## Kernel module for pps (/etc/modules)
+
+add line for:
+
+    pps_ldisc
+
