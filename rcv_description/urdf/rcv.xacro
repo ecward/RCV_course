@@ -1,0 +1,72 @@
+<?xml version="1.0" ?>
+<robot name="scitosA5chest"
+       xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       xmlns:joint="http://playerstage.sourceforge.net/gazebo/xmlschema/#slider"
+       xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+       xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- calibration data -->
+  <!-- <xacro:include filename="$(find rcv_description)/urdf/rcv.xacro" /> -->
+
+  <!-- Base link is the actual robot body -->
+  <link name="base_link">
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0.3"/>
+      <geometry>
+        <cylinder length="0.6" radius="0.2"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Connect base to chest_xtion_link -->
+  <link name="sensor_board_link"/>
+  <link name="velodyne_left"/>
+  <link name="velodyne_right"/>
+  <link name="trimble"/>
+  <link name="left_optical"/>
+  <link name="right_optical"/>
+
+  <joint name="base_sensor_board_joint" type="fixed" >
+    <origin rpy="0 0 0"
+            xyz="1.75 0 1.5" />
+    <parent link="base_link"/>
+    <child link="sensor_board_link"/>
+  </joint>
+
+  <joint name="velodyne_right_joint" type="fixed" >
+    <origin rpy="0 0 0"
+            xyz="0 0.7 0" />
+    <parent link="sensor_board_link"/>
+    <child link="velodyne_right"/>
+  </joint>
+
+  <joint name="velodyne_left_joint" type="fixed" >
+    <origin rpy="0 0 0"
+            xyz="0 -0.675 0" />
+    <parent link="sensor_board_link"/>
+    <child link="velodyne_left"/>
+  </joint>
+
+  <joint name="trimble_joint" type="fixed" >
+    <origin rpy="0 0 0"
+            xyz="0.06 0 0" />
+    <parent link="sensor_board_link"/>
+    <child link="trimble"/>
+  </joint>
+
+  <joint name="camera_left_joint" type="fixed" >
+    <origin rpy="0 0 0"
+            xyz="0 -0.5 0" />
+    <parent link="sensor_board_link"/>
+    <child link="left_optical"/>
+  </joint>
+
+  <joint name="camera_right_joint" type="fixed" >
+    <origin rpy="0 0 0"
+            xyz="0 0.5 0" />
+    <parent link="sensor_board_link"/>
+    <child link="right_optical"/>
+  </joint>
+
+</robot>

@@ -1,0 +1,19 @@
+<launch> 
+    <arg name="machine" default="localhost" />
+    <arg name="user" default="" />
+
+    <machine name="$(arg machine)" address="$(arg machine)" env-loader="$(optenv ROS_ENV_LOADER )" user="$(arg user)" default="true"/>
+
+    <!-- Robot -->
+    <arg name="urdf_file" default="$(find xacro)/xacro.py '$(find rcv_description)/urdf/rcv.xacro'" />
+    <arg name="model_file" default="$(find xacro)/xacro.py '$(find rcv_description)/urdf/rcv_model.xacro'" />
+    <param name="robot_description" command="$(arg urdf_file)" />
+
+    <group ns="rcv">
+      <param name="robot_description" command="$(arg urdf_file)" />
+      <!-- Joint state publisher to accumulate joints -->
+      <node name="rcv_joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
+      <node name="rcv_robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
+   </group>
+
+</launch>
