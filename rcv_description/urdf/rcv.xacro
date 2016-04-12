@@ -35,15 +35,15 @@
   </joint>
 
   <joint name="velodyne_right_joint" type="fixed" >
-    <origin rpy="0 0 0"
-            xyz="0 0.7 0" />
+    <origin rpy="0 0 -1.57"
+            xyz="0 -0.7 0" />
     <parent link="sensor_board_link"/>
     <child link="velodyne_right"/>
   </joint>
 
   <joint name="velodyne_left_joint" type="fixed" >
-    <origin rpy="0 0 0"
-            xyz="0 -0.675 0" />
+    <origin rpy="0 0 1.57"
+            xyz="0 0.675 0" />
     <parent link="sensor_board_link"/>
     <child link="velodyne_left"/>
   </joint>
@@ -57,14 +57,14 @@
 
   <joint name="camera_left_joint" type="fixed" >
     <origin rpy="0 0 0"
-            xyz="0 -0.5 0" />
+            xyz="0 0.5 0" />
     <parent link="sensor_board_link"/>
     <child link="left_optical"/>
   </joint>
 
   <joint name="camera_right_joint" type="fixed" >
     <origin rpy="0 0 0"
-            xyz="0 0.5 0" />
+            xyz="0 -0.5 0" />
     <parent link="sensor_board_link"/>
     <child link="right_optical"/>
   </joint>
