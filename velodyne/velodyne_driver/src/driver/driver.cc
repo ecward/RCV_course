@@ -326,8 +326,10 @@ bool VelodyneDriver::poll(void)
             // We need to set the timestamp here also!
             //Set time for each packet
             for(int i = 0; i < config_.npackets; ++i){
-                double ptime_i = getScanTime(ros::Time::now().toSec(),scan,i);
-                scan->packets[i].stamp = ros::Time(ptime_i);
+		///TODO, should be option
+                //double ptime_i = getScanTime(ros::Time::now().toSec(),scan,i);
+                //scan->packets[i].stamp = ros::Time(ptime_i);
+		scan->packets[i].stamp = ros::Time::now();
             }
 
             scan->header.stamp = ros::Time(scan->packets[config_.npackets - 1].stamp);
