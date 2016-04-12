@@ -1,0 +1,26 @@
+<!-- -*- mode: XML -*- -->
+<!-- 
+
+Run two nodelets for the two velodynes (left and right)
+
+   $Id$
+  -->
+
+<launch>
+  <arg name="pcap" default=""/>
+
+  <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch">
+    <arg name="stream_id" value="left" />
+    <arg name="pcap" value="$(arg pcap)"/>
+    <arg name="device_ip" value="192.168.1.11"/>
+    <arg name="port" value="2369" />
+  </include>
+
+  <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch">
+    <arg name="stream_id" value="right" />
+    <arg name="pcap" value="$(arg pcap)"/>
+    <arg name="device_ip" value="192.168.1.10"/>
+    <arg name="port" value="2368" />
+  </include>
+</launch>
+

@@ -1,0 +1,21 @@
+<launch>
+    <arg name="grid_size" default="0.2"/>
+    <arg name="max_radius" default="20.0"/>
+    <arg name="double_radius" default="7.0"/>
+    <arg name="max_height" default="1.0"/>
+    <arg name="min_height" default="-1.5"/>
+
+    <node pkg="velodyne_tracking" type="create_elevation_map" name="create_elevation_map" output="screen" respawn="false">
+        <param name="grid_size" value="$(arg grid_size)"/>
+        <param name="max_radius" value="$(arg max_radius)"/>
+        <param name="double_radius" value="$(arg double_radius)"/>
+    </node>
+    <node pkg="velodyne_tracking" type="create_filled_elevation_map" name="create_filled_elevation_map" output="screen" respawn="false">
+        <param name="max_height" value="$(arg max_height)"/>
+        <param name="min_height" value="$(arg min_height)"/>
+    </node>
+    <node pkg="velodyne_tracking" type="create_elevation_blobs" name="create_elevation_blobs" output="screen" respawn="false">
+        <param name="grid_size" value="$(arg grid_size)"/>
+        <param name="max_radius" value="$(arg max_radius)"/>
+    </node>
+</launch>

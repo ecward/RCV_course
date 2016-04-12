@@ -1,0 +1,24 @@
+<!-- -*- mode: XML -*- -->
+<!-- run velodyne_pointcloud/CloudNodelet in a nodelet manager
+
+     arg: calibration = path to calibration file
+
+     $Id$
+  -->
+
+<launch>
+  <arg name="stream_id" default="0" />
+  <arg name="calibration" default="" />
+  <arg name="min_range" default="0.9" />
+  <arg name="max_range" default="130.0" />
+  <arg name="pcap" default="" />
+  <node pkg="nodelet" type="nodelet" name="cloud_nodelet_$(arg stream_id)"
+        args="load velodyne_pointcloud/CloudNodelet velodyne_nodelet_manager_$(arg stream_id)"
+	output="screen">
+    <param name="stream_id" value="$(arg stream_id)" />
+    <param name="calibration" value="$(arg calibration)"/>
+    <param name="pcap" value="(arg pcap)" />
+    <param name="min_range" value="$(arg min_range)"/>
+    <param name="max_range" value="$(arg max_range)"/>
+  </node>
+</launch>
