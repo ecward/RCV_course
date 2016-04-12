@@ -123,7 +123,7 @@ private:
   bool checkIfLoadingComplete();
 
   /// URI for tile [x,y]
-  QUrl uriForTile(int x, int y) const;
+  QUrl uriForTile(int x, int y, int zoom) const;
 
   /// Get name for cached tile [x,y,z]
   QString cachedNameForTile(int x, int y, int z) const;

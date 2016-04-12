@@ -22,6 +22,7 @@
 #include <ros/ros.h>
 #include <ros/package.h>
 #include <functional> // for std::hash
+#include <math.h>
 
 static size_t replaceRegex(const boost::regex &ex, std::string &str,
                            const std::string &replace) {
@@ -116,7 +117,7 @@ void TileLoader::start() {
         QImage image(full_path);
         tiles_.push_back(MapTile(x, y, zoom_, image));
       } else {
-        const QUrl uri = uriForTile(x, y);
+        const QUrl uri = uriForTile(x, y, zoom_);
         //  send request
         const QNetworkRequest request = QNetworkRequest(uri);
         QNetworkReply *rep = qnam_->get(request);
@@ -208,16 +209,67 @@ bool TileLoader::checkIfLoadingComplete() {
   return loaded;
 }
 
-QUrl TileLoader::uriForTile(int x, int y) const {
-  std::string object = object_uri_;
-  //  place {x},{y},{z} with appropriate values
-  replaceRegex(boost::regex("\\{x\\}", boost::regex::icase), object,
-               std::to_string(x));
-  replaceRegex(boost::regex("\\{y\\}", boost::regex::icase), object,
-               std::to_string(y));
+std::string replaceCommaWithDot(std::string str) {
+    std::replace(str.begin(),str.end(),',','.');
+    return str;
+}
+
+QUrl TileLoader::uriForTile(int x, int y, int zoom) const {
+
+    ///support both http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames AND lon,lat based API:s
+
+    //Bing has min_lat,max_lat min_lon,max_lon API
+    //double lon1 = ((double)x-0.5)/n_dbl*360.0 -180.0;
+    //this is the north_west corner of the tile
+    unsigned int n = (1 << zoom);
+    double n_dbl = (double)n;
+    double nw_lon = x/n_dbl*360.0 -180.0;
+    double lat_rad = atan(sinh(M_PI*(1-2*y/n_dbl)));
+    double nw_lat = lat_rad * 180.0/M_PI;
+
+    double se_lon = ((double)x+1.0)/n_dbl*360.0 -180.0;
+    double se_rad = atan(sinh(M_PI*(1-2*((double)y+1.0)/n_dbl)));
+    double se_lat = se_rad * 180.0/M_PI;
+
+
+    double center_lon2 = ((double)x+0.5)/n_dbl*360.0 -180.0;
+
+
+    double lat_rad2 = atan(sinh(M_PI*(1-2*((double)y+0.5)/n_dbl)));
+    double center_lat2 = lat_rad2 * 180.0/M_PI;
+
+
+    ROS_INFO_STREAM("Tile = " << x <<", "<<y <<" TL lat,lon = "<<nw_lat << ", "<< nw_lon);
+    ROS_INFO_STREAM("Tile = " << x <<", "<<y <<" BR lat,lon = "<<se_lat << ", "<< se_lon);
+
+    std::string object = object_uri_;
+    //  place {x},{y},{z} with appropriate values
+    replaceRegex(boost::regex("\\{x\\}", boost::regex::icase), object,
+                 std::to_string(x));
+    replaceRegex(boost::regex("\\{y\\}", boost::regex::icase), object,
+                 std::to_string(y));
+
+    replaceRegex(boost::regex("\\{lat\\}", boost::regex::icase), object,
+                 replaceCommaWithDot(std::to_string(center_lat2)));
+    replaceRegex(boost::regex("\\{lon\\}", boost::regex::icase), object,
+                 replaceCommaWithDot(std::to_string(center_lon2)));
+
+    replaceRegex(boost::regex("\\{min_lat\\}", boost::regex::icase), object,
+                 replaceCommaWithDot(std::to_string(se_lat)));
+    replaceRegex(boost::regex("\\{min_lon\\}", boost::regex::icase), object,
+                 replaceCommaWithDot(std::to_string(nw_lon)));
+    replaceRegex(boost::regex("\\{max_lat\\}", boost::regex::icase), object,
+                 replaceCommaWithDot(std::to_string(nw_lat)));
+    replaceRegex(boost::regex("\\{max_lon\\}", boost::regex::icase), object,
+                 replaceCommaWithDot(std::to_string(se_lon)));
+
+
+
   replaceRegex(boost::regex("\\{z\\}", boost::regex::icase), object,
                std::to_string(zoom_));
 
+  ROS_INFO_STREAM("URL = "<<object);
+  ROS_INFO_STREAM("lat_diff = "<<nw_lat-se_lat<<" lon_diff = "<<se_lon-nw_lon);
   const QString qstr = QString::fromStdString(object);
   return QUrl(qstr);
 }
