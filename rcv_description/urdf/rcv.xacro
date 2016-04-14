@@ -50,9 +50,9 @@
 
   <joint name="trimble_joint" type="fixed" >
     <origin rpy="0 0 0"
-            xyz="0.06 0 0" />
-    <parent link="sensor_board_link"/>
-    <child link="trimble"/>
+            xyz="1.81 0 1.5" />
+    <parent link="trimble"/>
+    <child link="base_link"/>
   </joint>
 
   <joint name="camera_left_joint" type="fixed" >
