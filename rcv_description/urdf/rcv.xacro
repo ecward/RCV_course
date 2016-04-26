@@ -27,6 +27,13 @@
   <link name="left_optical"/>
   <link name="right_optical"/>
 
+  <joint name="trimble_joint" type="fixed" >
+    <origin rpy="0 0 0"
+            xyz="-1.81 0 -1.5" />
+    <parent link="trimble"/>
+    <child link="base_link"/>
+  </joint>
+
   <joint name="base_sensor_board_joint" type="fixed" >
     <origin rpy="0 0 0"
             xyz="1.75 0 1.5" />
@@ -46,13 +53,6 @@
             xyz="0 0.675 0" />
     <parent link="sensor_board_link"/>
     <child link="velodyne_left"/>
-  </joint>
-
-  <joint name="trimble_joint" type="fixed" >
-    <origin rpy="0 0 0"
-            xyz="0.06 0 0" />
-    <parent link="sensor_board_link"/>
-    <child link="trimble"/>
   </joint>
 
   <joint name="camera_left_joint" type="fixed" >
