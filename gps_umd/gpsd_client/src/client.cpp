@@ -25,7 +25,7 @@ std::string frame_id, child_frame_id;
 
 class GPSDClient {
   public:
-    GPSDClient() : privnode("~"), gps(NULL), use_gps_time(true), check_fix_by_variance(true),last_OK_course(0.0) {}
+    GPSDClient() : privnode("~"), gps(NULL), use_gps_time(false), check_fix_by_variance(false),last_OK_course(0.0) {}
 
     bool start() {
       gps_fix_pub = node.advertise<GPSFix>("extended_fix", 1);
@@ -235,7 +235,7 @@ class GPSDClient {
 
         //angle in degrees, clockwise from north, we want angle in radians counter-clockwise from east
         double courseTrueNorthDeg = p->fix.track;
-        if(!isnan(courseTrueNorthDeg)) {
+        if(!isnan(courseTrueNorthDeg) && p->fix.speed > 2.0) { //gpslib speed in meters/s
             last_OK_course = courseTrueNorthDeg;
         }
         double yaw = M_PI/180.0*(90-last_OK_course);

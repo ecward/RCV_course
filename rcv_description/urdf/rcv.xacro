@@ -9,7 +9,7 @@
   <!-- calibration data -->
   <!-- <xacro:include filename="$(find rcv_description)/urdf/rcv.xacro" /> -->
 
-  <!-- Base link is the actual robot body -->
+  <!-- Base link is the actual robot body, on the ground-->
   <link name="base_link">
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0.3"/>
@@ -26,6 +26,12 @@
   <link name="trimble"/>
   <link name="left_optical"/>
   <link name="right_optical"/>
+  <link name="flwheel"/>
+  <link name="frwheel"/>
+  <link name="rlwheel"/>
+  <link name="rrwheel"/>  
+  <link name="imu"/>
+
 
   <joint name="trimble_joint" type="fixed" >
     <origin rpy="0 0 0"
@@ -53,6 +59,42 @@
             xyz="0 0.675 0" />
     <parent link="sensor_board_link"/>
     <child link="velodyne_left"/>
+  </joint>
+
+  <joint name="imu_joint" type="fixed" >
+    <origin rpy="0 0 0"
+            xyz="0 0 0.15" />
+    <parent link="base_link"/>
+    <child link="imu"/>
+  </joint>
+
+  <!-- Radius of wheels 0.3 meters -->
+  <joint name="frwheel_joint" type="fixed" >
+    <origin rpy="0 0 0"
+            xyz="1 -0.75 0.165" />
+    <parent link="base_link"/>
+    <child link="frwheel"/>
+  </joint>
+
+  <joint name="flwheel_joint" type="fixed" >
+    <origin rpy="0 0 0"
+            xyz="1 0.75 0.165" />
+    <parent link="base_link"/>
+    <child link="flwheel"/>
+  </joint>
+
+  <joint name="rrwheel_joint" type="fixed" >
+    <origin rpy="0 0 0"
+            xyz="-1 -0.75 0.165" />
+    <parent link="base_link"/>
+    <child link="rrwheel"/>
+  </joint>
+
+  <joint name="rlwheel_joint" type="fixed" >
+    <origin rpy="0 0 0"
+            xyz="-1 0.75 0.165" />
+    <parent link="base_link"/>
+    <child link="rlwheel"/>
   </joint>
 
   <joint name="camera_left_joint" type="fixed" >
