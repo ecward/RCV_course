@@ -1,0 +1,39 @@
+update_frequency: 5.0
+publish_frequency: 2.0
+static_map: false
+rolling_window: true
+width: 20.0
+height: 20.0
+resolution: 0.2
+plugins:
+  - {name: obstacle_layer, type: "costmap_2d::ObstacleLayer"}
+  - {name: inflation_layer, type: "costmap_2d::InflationLayer"}
+
+global_frame: /map
+robot_base_frame: /base_link
+
+footprint: [[1, 0.75], # Front left
+            [1, -0.75], # Front right
+            [-1, -0.75], # Back right
+            [-1, 0.75]] # Back left
+
+footprint_padding: 0.0001
+
+#map_layer:
+#  map_topic: /map
+
+inflation_layer:
+  inflation_radius: 0.8
+  cost_scaling_factor: 5.0
+
+obstacle_layer:
+  max_obstacle_height: 2.0
+  obstacle_range: 2.5
+  raytrace_range: 3.0
+
+  observation_sources: left_velodyne right_velodyne
+
+  left_velodyne: {topic: /move_base/projected_left_velodyne, data_type: PointCloud2, marking: true, clearing: true, min_obstacle_height: 0.1, max_obstacle_height: 0.9, observation_persistence: 0.0, obstacle_range: 2.0, raytrace_range: 4.0}
+  right_velodyne: {topic: /move_base/projected_right_velodyne, data_type: PointCloud2, marking: true, clearing: true, min_obstacle_height: 0.1, max_obstacle_height: 0.9, observation_persistence: 0.0, obstacle_range: 2.0, raytrace_range: 4.0}
+
+  track_unknown_space: true
