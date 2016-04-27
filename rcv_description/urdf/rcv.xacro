@@ -11,6 +11,12 @@
 
   <!-- Base link is the actual robot body, on the ground-->
   <link name="base_link">
+    <visual>
+      <origin rpy="0 0 3.14" xyz="0 0 0"/>
+        <geometry>
+          <mesh filename="package://rcv_description/meshes/RCV_assembly_stl_downsample.dae" scale="0.025 0.025 0.025"/>
+        </geometry>
+    </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0.3"/>
       <geometry>
@@ -29,20 +35,20 @@
   <link name="flwheel"/>
   <link name="frwheel"/>
   <link name="rlwheel"/>
-  <link name="rrwheel"/>  
+  <link name="rrwheel"/>
   <link name="imu"/>
 
 
   <joint name="trimble_joint" type="fixed" >
     <origin rpy="0 0 0"
-            xyz="-1.81 0 -1.5" />
+            xyz="0.09 0 -1.2" />
     <parent link="trimble"/>
     <child link="base_link"/>
   </joint>
 
   <joint name="base_sensor_board_joint" type="fixed" >
     <origin rpy="0 0 0"
-            xyz="1.75 0 1.5" />
+            xyz="-0.15 0 1.2" />
     <parent link="base_link"/>
     <child link="sensor_board_link"/>
   </joint>
