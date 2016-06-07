@@ -6,7 +6,8 @@ add_definitions(-std=c++11 -O3)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS roscpp pcl_ros std_msgs sensor_msgs cv_bridge tf tf_conversions)
+find_package(catkin REQUIRED COMPONENTS roscpp pcl_ros std_msgs sensor_msgs geometry_msgs
+                                        visualization_msgs cv_bridge tf tf_conversions)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -119,13 +120,13 @@ catkin_package(
 #include_directories(src)
 
 ## Declare a C++ library
-#add_library(oxts
-#  src/oxts/oxts.cpp src/oxts/oxts.h
-#)
+add_library(contour_blob_detector
+  src/contour_blob_detector/contour_blob_detector.cpp src/contour_blob_detector/contour_blob_detector.h
+)
 
-#target_link_libraries(oxts
-#  ${PCL_LIBRARIES}
-#)
+target_link_libraries(contour_blob_detector
+  ${OpenCV_LIBS}
+)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -167,6 +168,7 @@ target_link_libraries(create_elevation_blobs
   ${catkin_LIBRARIES}
   ${PCL_LIBRARIES}
   ${OpenCV_LIBS}
+  contour_blob_detector
 )
 
 target_link_libraries(publish_velodyne_clouds
